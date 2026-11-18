@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Supervisor task runtime state",
+  "description": "One authoritative state per run. Editorial methods and business phases are intentionally absent.",
+  "type": "object",
+  "required": ["schema_version", "orchestration_mode", "run_id", "goal", "epoch", "lifecycle", "revision", "tasks", "artifacts", "pending_commit"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "orchestration_mode": {"const": "supervisor"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "goal": {"type": ["string", "object"]},
+    "metadata": {"type": "object"},
+    "epoch": {"type": "integer", "minimum": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "lifecycle": {"enum": ["active", "completed", "cancelled"]},
+    "deliverables": {"type": "array", "items": {"type": "string"}},
+    "tasks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["id", "epoch", "role", "goal", "status", "depends_on", "required", "attempt", "input_refs", "allowed_write_roots"],
+        "properties": {
+          "id": {"type": "string"},
+          "epoch": {"type": "integer", "minimum": 1},
+          "role": {"type": "string"},
+          "goal": {"type": ["string", "object"]},
+          "status": {"enum": ["pending", "running", "waiting_user", "blocked", "succeeded", "failed", "cancelled", "superseded"]},
+          "depends_on": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "required": {"type": "boolean"},
+          "attempt": {"type": "integer", "minimum": 0},
+          "input_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["path"],
+              "properties": {
+                "path": {"type": "string", "minLength": 1},
+                "required": {"type": "boolean"},
+                "version_scope": {
+                  "enum": ["file", "article_content"],
+                  "description": "Optional input comparison scope. Default file preserves exact bytes; article_content includes the Markdown body and all frontmatter except tags/workflow_status, falling back to the full file when parsing is ambiguous. Write conflict checks always use full-file versions."
+                }
+              }
+            }
+          },
+          "allowed_write_roots": {"type": "array"}
+        }
+      }
+    },
+    "artifacts": {"type": "object"},
+    "pending_commit": {"type": ["object", "null"]},
+    "cleanup_pending": {"type": "array", "items": {"type": "string"}},
+    "completion": {"type": ["object", "null"]}
+  }
+}

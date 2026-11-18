@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "orchestration_mode": "supervisor",
+  "content_defaults": {
+    "prose_policy_revision": 2
+  },
+  "roles": {
+    "supervisor": {
+      "entrypoint": "agents/supervisor/SKILL.md",
+      "default_mode": "coordinate",
+      "modes": {
+        "coordinate": {}
+      },
+      "required_skills": [],
+      "default_skills": [],
+      "account_files": [
+        "L1_identity.md",
+        "L2_values.md"
+      ]
+    },
+    "research": {
+      "entrypoint": "agents/workers/research/SKILL.md",
+      "default_mode": "research",
+      "modes": {
+        "discover": {},
+        "research": {},
+        "verify": {}
+      },
+      "required_skills": [
+        "research"
+      ],
+      "default_skills": [],
+      "account_files": [
+        "L1_identity.md"
+      ],
+      "policy_refs": [
+        "config/policies/writing/claim-evidence-policy.md"
+      ]
+    },
+    "writer": {
+      "entrypoint": "agents/workers/writer/SKILL.md",
+      "default_mode": "compose",
+      "modes": {
+        "compose": {
+          "skill_modes": {
+            "natural-prose": "compose"
+          },
+          "policy_refs": [
+            "config/policies/writing/claim-evidence-policy.md"
+          ]
+        },
+        "edit": {
+          "skill_modes": {
+            "natural-prose": "compose"
+          },
+          "policy_refs": []
+        },
+        "repair": {
+          "skill_modes": {
+            "natural-prose": "refine"
+          },
+          "policy_refs": []
+        },
+        "title": {
+          "skill_modes": {
+            "natural-prose": "compose"
+          },
+          "policy_refs": [],
+          "default_skills": []
+        },
+        "summary": {
+          "skill_modes": {
+            "natural-prose": "compose"
+          },
+          "policy_refs": [],
+          "default_skills": []
+        }
+      },
+      "required_skills": [
+        "writing"
+      ],
+      "default_skills": [
+        "natural-prose"
+      ],
+      "account_files": [
+        "L1_identity.md",
+        "L3_content_dna.md",
+        "voice-overlay.md"
+      ]
+    },
+    "reviewer": {
+      "entrypoint": "agents/workers/reviewer/SKILL.md",
+      "default_mode": "review",
+      "modes": {
+        "review": {
+          "skill_modes": {
+            "natural-prose": "review"
+          }
+        },
+        "review-changes": {
+          "skill_modes": {
+            "natural-prose": "review"
+          }
+        },
+        "title": {
+          "skill_modes": {
+            "natural-prose": "review"
+          },
+          "default_skills": []
+        }
+      },
+      "required_skills": [
+        "review"
+      ],
+      "default_skills": [
+        "natural-prose"
+      ],
+      "account_files": [
+        "L1_identity.md",
+        "voice-overlay.md"
+      ],
+      "policy_refs": [
+        "config/policies/writing/claim-evidence-policy.md",
+        "config/policies/writing/publication-safety-policy.md"
+      ],
+      "independent_context": true
+    },
+    "visual": {
+      "entrypoint": "agents/workers/visual/SKILL.md",
+      "default_mode": "create",
+      "modes": {
+        "create": {},
+        "revise": {},
+        "export": {}
+      },
+      "required_skills": [
+        "visual"
+      ],
+      "default_skills": [],
+      "account_files": [
+        "L1_identity.md"
+      ]
+    }
+  },
+  "skills": {
+    "research": {
+      "kind": "production",
+      "entrypoint": "skills/research/SKILL.md",
+      "mode_refs": {
+        "discover": [
+          "skills/research/references/discovery.md"
+        ],
+        "research": [
+          "skills/research/references/evidence.md"
+        ],
+        "verify": [
+          "skills/research/references/evidence.md"
+        ]
+      }
+    },
+    "writing": {
+      "kind": "production",
+      "entrypoint": "skills/writing/SKILL.md",
+      "mode_refs": {
+        "edit": [
+          "skills/writing/references/editing.md"
+        ],
+        "repair": [
+          "skills/writing/references/editing.md"
+        ],
+        "title": [
+          "skills/writing/references/titles.md"
+        ],
+        "summary": [
+          "skills/writing/references/titles.md"
+        ]
+      }
+    },
+    "natural-prose": {
+      "kind": "production",
+      "entrypoint": "skills/natural-prose/SKILL.md",
+      "mode_refs": {}
+    },
+    "review": {
+      "kind": "production",
+      "entrypoint": "skills/review/SKILL.md",
+      "mode_refs": {}
+    },
+    "visual": {
+      "kind": "production",
+      "entrypoint": "skills/visual/SKILL.md",
+      "mode_refs": {
+        "create": [
+          "skills/visual/references/routing.md"
+        ],
+        "revise": [
+          "skills/visual/references/routing.md"
+        ],
+        "export": [
+          "skills/visual/references/routing.md"
+        ]
+      }
+    }
+  },
+  "accounts": {
+    "decoupleai": {
+      "directory": "config/accounts/decoupleai"
+    },
+    "studio": {
+      "directory": "config/accounts/studio"
+    },
+    "intellifuture": {
+      "directory": "config/accounts/intellifuture"
+    }
+  },
+  "optional_capabilities": {
+    "aihot-researcher": {
+      "kind": "production_optional",
+      "structure": "skill",
+      "owner": "research",
+      "path": ".agents/skills/aihot-researcher",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/aihot-researcher",
+      "host_alias": ".claude/skills/aihot-researcher",
+      "entrypoint": ".agents/skills/aihot-researcher/SKILL.md"
+    },
+    "axton-obsidian-visual-skills": {
+      "kind": "production_optional",
+      "structure": "bundle",
+      "owner": "visual",
+      "path": ".agents/skills/axton-obsidian-visual-skills",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/axton-obsidian-visual-skills",
+      "host_alias": ".claude/skills/axton-obsidian-visual-skills",
+      "entrypoints": {
+        "mermaid-visualizer": ".agents/skills/axton-obsidian-visual-skills/mermaid-visualizer/SKILL.md",
+        "excalidraw-diagram": ".agents/skills/axton-obsidian-visual-skills/excalidraw-diagram/SKILL.md",
+        "obsidian-canvas-creator": ".agents/skills/axton-obsidian-visual-skills/obsidian-canvas-creator/SKILL.md"
+      }
+    },
+    "browser-use": {
+      "kind": "production_optional",
+      "structure": "bundle",
+      "owner": "research",
+      "path": ".agents/skills/browser-use",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/browser-use",
+      "host_alias": ".claude/skills/browser-use",
+      "entrypoints": {
+        "remote-browser": ".agents/skills/browser-use/skills/remote-browser/SKILL.md",
+        "open-source": ".agents/skills/browser-use/skills/open-source/SKILL.md",
+        "cloud": ".agents/skills/browser-use/skills/cloud/SKILL.md",
+        "browser-use": ".agents/skills/browser-use/skills/browser-use/SKILL.md"
+      }
+    },
+    "case-runner": {
+      "kind": "compatibility",
+      "structure": "skill",
+      "owner": "research",
+      "path": ".agents/skills/case-runner",
+      "default_loaded": false,
+      "availability": "verify_before_use",
+      "source": ".agents/skills/case-runner",
+      "host_alias": ".claude/skills/case-runner"
+    },
+    "claude-mem": {
+      "kind": "host_maintenance",
+      "structure": "bundle",
+      "owner": null,
+      "path": ".agents/skills/claude-mem",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/claude-mem",
+      "host_alias": ".claude/skills/claude-mem"
+    },
+    "doc-sync": {
+      "kind": "maintenance",
+      "structure": "skill",
+      "owner": null,
+      "path": ".agents/skills/doc-sync",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/doc-sync",
+      "host_alias": ".claude/skills/doc-sync"
+    },
+    "excalidraw-diagram-skill": {
+      "kind": "production_optional",
+      "structure": "skill",
+      "owner": "visual",
+      "path": ".agents/skills/excalidraw-diagram-skill",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/excalidraw-diagram-skill",
+      "host_alias": ".claude/skills/excalidraw-diagram-skill",
+      "entrypoint": ".agents/skills/excalidraw-diagram-skill/SKILL.md"
+    },
+    "html-svg-to-png": {
+      "kind": "production_optional",
+      "structure": "skill",
+      "owner": "visual",
+      "path": ".agents/skills/html-svg-to-png",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/html-svg-to-png",
+      "host_alias": ".claude/skills/html-svg-to-png",
+      "entrypoint": ".agents/skills/html-svg-to-png/SKILL.md"
+    },
+    "issue-fixer": {
+      "kind": "maintenance",
+      "structure": "skill",
+      "owner": null,
+      "path": ".agents/skills/issue-fixer",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/issue-fixer",
+      "host_alias": ".claude/skills/issue-fixer"
+    },
+    "markdown-mermaid-writing": {
+      "kind": "production_optional",
+      "structure": "skill",
+      "owner": "visual",
+      "path": ".agents/skills/markdown-mermaid-writing",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/markdown-mermaid-writing",
+      "host_alias": ".claude/skills/markdown-mermaid-writing",
+      "entrypoint": ".agents/skills/markdown-mermaid-writing/SKILL.md"
+    },
+    "retro-optimizer": {
+      "kind": "maintenance",
+      "structure": "skill",
+      "owner": null,
+      "path": ".agents/skills/retro-optimizer",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/retro-optimizer",
+      "host_alias": ".claude/skills/retro-optimizer"
+    },
+    "svg-knowledge-card": {
+      "kind": "production_optional",
+      "structure": "skill",
+      "owner": "visual",
+      "path": ".agents/skills/svg-knowledge-card",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/svg-knowledge-card",
+      "host_alias": ".claude/skills/svg-knowledge-card",
+      "entrypoint": ".agents/skills/svg-knowledge-card/skill.md"
+    },
+    "ui-view-render": {
+      "kind": "production_optional",
+      "structure": "skill",
+      "owner": "visual",
+      "path": ".agents/skills/ui-view-render",
+      "default_loaded": false,
+      "availability": "on_request",
+      "source": ".agents/skills/ui-view-render",
+      "host_alias": ".claude/skills/ui-view-render",
+      "entrypoint": ".agents/skills/ui-view-render/SKILL.md"
+    }
+  },
+  "maintenance": {
+    "project_optimizer": "skills/maintenance/skill-optimizer-native/SKILL.md",
+    "general_optimizer": "skills/maintenance/skill-optimizer/SKILL.md",
+    "default_loaded": false
+  },
+  "host_entries": {
+    "research": {
+      "source": "skills/research",
+      "names": {
+        "codex": ".agents/skills/textpicos-research",
+        "claude": ".claude/skills/textpicos-research"
+      }
+    },
+    "writing": {
+      "source": "skills/writing",
+      "names": {
+        "codex": ".agents/skills/textpicos-writing",
+        "claude": ".claude/skills/textpicos-writing"
+      }
+    },
+    "natural-prose": {
+      "source": "skills/natural-prose",
+      "names": {
+        "codex": ".agents/skills/natural-prose",
+        "claude": ".claude/skills/natural-prose"
+      }
+    },
+    "review": {
+      "source": "skills/review",
+      "names": {
+        "codex": ".agents/skills/textpicos-review",
+        "claude": ".claude/skills/textpicos-review"
+      }
+    },
+    "visual": {
+      "source": "skills/visual",
+      "names": {
+        "codex": ".agents/skills/textpicos-visual",
+        "claude": ".claude/skills/textpicos-visual"
+      }
+    }
+  },
+  "legacy_roles": {
+    "decouple-chief-editor": {
+      "compatible_path": "agents/decouple-chief-editor",
+      "source": "agents/legacy/decouple-chief-editor",
+      "replaced_by": "supervisor",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-workflow-manager": {
+      "compatible_path": "agents/decouple-workflow-manager",
+      "source": "agents/legacy/decouple-workflow-manager",
+      "replaced_by": "supervisor",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-researcher": {
+      "compatible_path": "agents/decouple-researcher",
+      "source": "agents/legacy/decouple-researcher",
+      "replaced_by": "research",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-decoupler": {
+      "compatible_path": "agents/decouple-decoupler",
+      "source": "agents/legacy/decouple-decoupler",
+      "replaced_by": "research",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-architect": {
+      "compatible_path": "agents/decouple-architect",
+      "source": "agents/legacy/decouple-architect",
+      "replaced_by": "writer",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-writer": {
+      "compatible_path": "agents/decouple-writer",
+      "source": "agents/legacy/decouple-writer",
+      "replaced_by": "writer",
+      "default_loaded": false,
+      "compatibility_kind": "entry_links",
+      "compatibility_files": [
+        "runtime-legacy-v3.md",
+        "runtime-v4.md",
+        "runtime-v4_1.md",
+        "runtime-v4_2.md"
+      ]
+    },
+    "decouple-refiner": {
+      "compatible_path": "agents/decouple-refiner",
+      "source": "agents/legacy/decouple-refiner",
+      "replaced_by": "writer",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-hook-master": {
+      "compatible_path": "agents/decouple-hook-master",
+      "source": "agents/legacy/decouple-hook-master",
+      "replaced_by": "writer",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-reviewer": {
+      "compatible_path": "agents/decouple-reviewer",
+      "source": "agents/legacy/decouple-reviewer",
+      "replaced_by": "reviewer",
+      "default_loaded": false,
+      "compatibility_kind": "entry_links",
+      "compatibility_files": [
+        "runtime-legacy-v3.md",
+        "runtime-v4.md",
+        "runtime-v4_1.md",
+        "runtime-v4_2-body-review.md",
+        "runtime-v4_2-recheck.md"
+      ]
+    },
+    "decouple-title-judge": {
+      "compatible_path": "agents/decouple-title-judge",
+      "source": "agents/legacy/decouple-title-judge",
+      "replaced_by": "reviewer",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-visual-designer": {
+      "compatible_path": "agents/decouple-visual-designer",
+      "source": "agents/legacy/decouple-visual-designer",
+      "replaced_by": "visual",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "decouple-style-analyst": {
+      "compatible_path": "agents/decouple-style-analyst",
+      "source": "agents/legacy/decouple-style-analyst",
+      "replaced_by": "maintenance",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "_utilities/material-fetcher": {
+      "compatible_path": "agents/_utilities/material-fetcher",
+      "source": "agents/legacy/_utilities/material-fetcher",
+      "replaced_by": "research/visual tool",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    },
+    "_utilities/decouple-anchor-assistant": {
+      "compatible_path": "agents/_utilities/decouple-anchor-assistant",
+      "source": "agents/legacy/_utilities/decouple-anchor-assistant",
+      "replaced_by": "legacy only",
+      "default_loaded": false,
+      "compatibility_kind": "directory_link"
+    }
+  }
+}
