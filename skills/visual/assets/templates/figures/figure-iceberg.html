@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure — Iceberg (表象 vs 本质)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: transparent;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 20px;
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.figure {
+  width: 720px;
+  background: linear-gradient(180deg, #eff6ff 0%, #eff6ff 28%, #ffffff 28%, #f8fafc 100%);
+  border: 1px solid #d8dee6;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 32px 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.figure-caption {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  padding: 0 32px 16px 32px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.tip {
+  margin: 0 auto;
+  width: 38%;
+  background: rgba(255,255,255,0.95);
+  border: 2px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 18px 16px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.tip-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.tip-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.tip-desc {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.waterline {
+  height: 4px;
+  background: repeating-linear-gradient(90deg, rgba(37,99,235,0.35) 0 12px, transparent 12px 24px);
+  margin: 12px 0 18px 0;
+}
+.waterline-label {
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #2563eb;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.depths {
+  padding: 0 32px;
+}
+.depth {
+  margin-bottom: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #58a6ff;
+  border-radius: 6px;
+  padding: 16px 20px;
+  position: relative;
+}
+.depth.l2 { border-left-color: #3fb950; margin-left: 8%; margin-right: 8%; }
+.depth.l3 { border-left-color: #bc8cff; margin-left: 16%; margin-right: 16%; }
+
+.depth-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.depth-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.depth-desc {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.figure-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 11px;
+  color: #6b7280;
+  padding: 8px 0 4px 0;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+<div class="figure">
+  <div class="figure-caption">{{FIGURE_CAPTION}}</div>
+
+  <div class="tip">
+    <div class="tip-label">{{SURFACE_LABEL}}</div>
+    <div class="tip-title">{{SURFACE_TITLE}}</div>
+    <div class="tip-desc">{{SURFACE_DESC}}</div>
+  </div>
+
+  <div class="waterline"></div>
+  <div class="waterline-label">— 水线 / 表象 vs 本质 —</div>
+
+  <div class="depths">
+    <div class="depth">
+      <div class="depth-label">{{DEPTH_1_LABEL}}</div>
+      <div class="depth-title">{{DEPTH_1_TITLE}}</div>
+      <div class="depth-desc">{{DEPTH_1_DESC}}</div>
+    </div>
+    <div class="depth l2">
+      <div class="depth-label">{{DEPTH_2_LABEL}}</div>
+      <div class="depth-title">{{DEPTH_2_TITLE}}</div>
+      <div class="depth-desc">{{DEPTH_2_DESC}}</div>
+    </div>
+    <div class="depth l3">
+      <div class="depth-label">{{DEPTH_3_LABEL}}</div>
+      <div class="depth-title">{{DEPTH_3_TITLE}}</div>
+      <div class="depth-desc">{{DEPTH_3_DESC}}</div>
+    </div>
+  </div>
+
+  <div class="figure-footer">DecoupleAI · 冰山图</div>
+</div>
+</body>
+</html>

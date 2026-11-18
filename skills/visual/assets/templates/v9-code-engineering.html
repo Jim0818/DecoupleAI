@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据STUDIO Card — V9 Code Engineering</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #f4f6f8;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 40px 20px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', system-ui, sans-serif;
+}
+
+/* ── Card shell ── */
+.card {
+  width: 560px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #d8dee6;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  padding: 22px 28px 18px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+.header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #3fb950 35%, #FF8C42 65%, transparent 100%);
+}
+.header-meta {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 12px;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-red   { background: #ff5f57; }
+.dot-yellow{ background: #ffbd2e; }
+.dot-green { background: #28ca41; }
+.header-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: #3fb950; margin-left: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+.header-title {
+  font-size: 20px; font-weight: 700; color: #0f172a;
+  line-height: 1.3; margin-bottom: 6px; letter-spacing: -0.3px;
+}
+.header-subtitle { font-size: 12px; color: #475569; line-height: 1.55; }
+
+/* ── Pain point banner ── */
+.pain-banner {
+  margin: 16px 20px 0;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-left: 3px solid #FF8C42;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.pain-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #FF8C42; margin-bottom: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+.pain-text { font-size: 12px; color: #334155; line-height: 1.55; }
+
+/* ── Code block ── */
+.code-block-wrap {
+  margin: 16px 20px 0;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.code-block-header {
+  background: #f1f5f9;
+  padding: 8px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid #cbd5e1;
+}
+.code-title { font-size: 10.5px; color: #475569; font-family: monospace; }
+.code-lang-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #3fb950; background: rgba(63,185,80,0.12);
+  padding: 2px 7px; border-radius: 4px;
+  font-family: monospace;
+}
+.code-content {
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 11.5px; line-height: 1.75; color: #0f172a;
+  white-space: pre; overflow-x: auto;
+}
+/* Syntax-highlight spans (optional — Visual Designer applies when filling CODE_SNIPPET) */
+.code-content .kw  { color: #be123c; }
+.code-content .fn  { color: #7c3aed; }
+.code-content .str { color: #0369a1; }
+.code-content .cm  { color: #64748b; font-style: italic; }
+.code-content .num { color: #1d4ed8; }
+.code-content .cls { color: #d97706; }
+.code-content .dec { color: #059669; }
+
+/* ── Library grid ── */
+.lib-section { margin: 16px 20px 0; }
+.lib-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #58a6ff; margin-bottom: 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+.lib-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.lib-card {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  transition: border-color 0.15s;
+}
+.lib-name {
+  font-size: 11px; font-weight: 700; color: #3fb950;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  margin-bottom: 4px;
+}
+.lib-role { font-size: 10.5px; color: #475569; line-height: 1.4; }
+.lib-cmd {
+  font-size: 9px; color: #64748b;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  margin-top: 6px;
+  background: #ffffff; border: 1px solid #e5e7eb; padding: 2px 5px; border-radius: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Core insight ── */
+.insight {
+  margin: 16px 20px 0;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-top: 2px solid #3fb950;
+  border-radius: 0 0 8px 8px;
+  padding: 14px 16px;
+}
+.insight-pre {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: #3fb950; margin-bottom: 7px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+.insight-text { font-size: 13.5px; font-weight: 600; color: #0f172a; line-height: 1.6; }
+
+/* ── Stats ── */
+.stats {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  margin: 16px 20px 0;
+}
+.stat {
+  background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px;
+  padding: 12px 14px;
+}
+.stat-val {
+  font-size: 26px; font-weight: 900; color: #3fb950;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  line-height: 1; margin-bottom: 4px;
+}
+.stat-val .unit { font-size: 12px; color: #64748b; font-weight: 400; }
+.stat-label { font-size: 10.5px; color: #475569; }
+
+/* ── Footer ── */
+.footer {
+  margin-top: 16px;
+  padding: 11px 22px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.brand {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #64748b;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+.brand span { color: #3fb950; }
+.meta { font-size: 10px; color: #94a3b8; font-family: monospace; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-meta">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+      <span class="header-tag">{{COLUMN}} · {{DATE}}</span>
+    </div>
+    <div class="header-title">{{TITLE}}</div>
+    <div class="header-subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <!-- Pain point -->
+  <div class="pain-banner">
+    <div class="pain-label">// pain point</div>
+    <div class="pain-text">{{PAIN_POINT}}</div>
+  </div>
+
+  <!-- Code block -->
+  <div class="code-block-wrap">
+    <div class="code-block-header">
+      <span class="code-title">{{CODE_TITLE}}</span>
+      <span class="code-lang-badge">{{CODE_LANG}}</span>
+    </div>
+    <div class="code-content">{{CODE_SNIPPET}}</div>
+  </div>
+
+  <!-- Library grid -->
+  <div class="lib-section">
+    <div class="lib-label">// key libraries</div>
+    <div class="lib-grid">
+      <div class="lib-card">
+        <div class="lib-name">{{LIB_1_NAME}}</div>
+        <div class="lib-role">{{LIB_1_ROLE}}</div>
+        <div class="lib-cmd">{{LIB_1_CMD}}</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">{{LIB_2_NAME}}</div>
+        <div class="lib-role">{{LIB_2_ROLE}}</div>
+        <div class="lib-cmd">{{LIB_2_CMD}}</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">{{LIB_3_NAME}}</div>
+        <div class="lib-role">{{LIB_3_ROLE}}</div>
+        <div class="lib-cmd">{{LIB_3_CMD}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core insight -->
+  <div class="insight">
+    <div class="insight-pre">$ core insight</div>
+    <div class="insight-text">{{CORE_INSIGHT}}</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">{{STAT_1_VALUE}}<span class="unit"> {{STAT_1_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_1_LABEL}}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">{{STAT_2_VALUE}}<span class="unit"> {{STAT_2_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_2_LABEL}}</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="brand"><span>数据</span>STUDIO</span>
+    <span class="meta">Python × AI · {{DATE}}</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DecoupleAI Card — V4 System Map</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #f4f6f8;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 40px 20px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', system-ui, sans-serif;
+}
+
+/* ── Card shell ── */
+.card {
+  width: 580px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #d8dee6;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  padding: 26px 30px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+/* subtle top accent line */
+.header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #58a6ff 40%, #3fb950 70%, transparent 100%);
+}
+.header-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #58a6ff; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.header-tag::before {
+  content: '';
+  display: inline-block; width: 6px; height: 6px;
+  background: #58a6ff; border-radius: 50%;
+}
+.header-title {
+  font-size: 21px; font-weight: 700; color: #0f172a;
+  line-height: 1.3; margin-bottom: 7px; letter-spacing: -0.3px;
+}
+.header-desc { font-size: 12.5px; color: #475569; line-height: 1.55; }
+
+/* ── Body ── */
+.body { padding: 20px 30px; }
+
+/* Essence row */
+.essence {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  margin-bottom: 22px;
+}
+.essence-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #58a6ff; flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(88,166,255,0.5);
+}
+.essence-text { font-size: 12.5px; color: #334155; }
+.essence-text strong { color: #1d4ed8; font-weight: 600; }
+
+/* ── Layers ── */
+.layers { position: relative; }
+
+/* Left spine */
+.layers::before {
+  content: '';
+  position: absolute; left: 15px; top: 18px; bottom: 18px;
+  width: 2px;
+  background: linear-gradient(to bottom, #60a5fa 0%, #34d399 60%, transparent 100%);
+  border-radius: 1px;
+}
+
+.layer {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+.layer:last-child { border-bottom: none; }
+
+/* Layer number bubble */
+.layer-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #ffffff; border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0; position: relative; z-index: 1;
+  box-shadow: 0 0 0 3px #ffffff;
+  margin-top: 1px;
+}
+.layer:nth-child(1) .layer-num { color: #58a6ff; border-color: rgba(88,166,255,0.4); }
+.layer:nth-child(2) .layer-num { color: #3fb950; border-color: rgba(63,185,80,0.4); }
+.layer:nth-child(3) .layer-num { color: #bc8cff; border-color: rgba(188,140,255,0.4); }
+
+.layer-content { flex: 1; min-width: 0; }
+.layer-name { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+.layer-desc { font-size: 12px; color: #475569; line-height: 1.6; margin-bottom: 8px; }
+
+.layer-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+.layer-tag {
+  font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 4px; border: 1px solid;
+}
+.layer:nth-child(1) .layer-tag { color: #2563eb; background: #eff6ff; border-color: #bfdbfe; }
+.layer:nth-child(2) .layer-tag { color: #059669; background: #f0fdf4; border-color: #bbf7d0; }
+.layer:nth-child(3) .layer-tag { color: #7c3aed; background: #faf5ff; border-color: #ddd6fe; }
+
+.layer-io { font-size: 11px; color: #64748b; font-family: 'SF Mono', 'Fira Code', monospace; }
+.layer-io .arr { color: #94a3b8; margin: 0 4px; }
+
+/* ── Variables ── */
+.variables {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+.variables-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.variables-label::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+
+.variables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.var-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+}
+.var-key {
+  font-size: 14px; font-weight: 800; color: #58a6ff;
+  flex-shrink: 0; line-height: 1.3;
+  font-family: Georgia, serif; font-style: italic;
+}
+.var-val { font-size: 11.5px; color: #475569; line-height: 1.45; }
+
+/* ── Footer ── */
+.footer {
+  padding: 12px 30px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.brand { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #64748b; }
+.brand span { color: #2563eb; }
+.meta { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-tag">System Map · 全局结构图</div>
+    <div class="header-title">{{TITLE}}</div>
+    <div class="header-desc">{{DESC}}</div>
+  </div>
+
+  <div class="body">
+
+    <div class="essence">
+      <div class="essence-dot"></div>
+      <div class="essence-text">本质是：<strong>{{ESSENCE}}</strong></div>
+    </div>
+
+    <div class="layers">
+      <div class="layer">
+        <div class="layer-num">L1</div>
+        <div class="layer-content">
+          <div class="layer-name">{{LAYER_1_NAME}}</div>
+          <div class="layer-desc">{{LAYER_1_DESC}}</div>
+          <div class="layer-tags">
+            <span class="layer-tag">{{LAYER_1_TAG_A}}</span>
+            <span class="layer-tag">{{LAYER_1_TAG_B}}</span>
+            <span class="layer-tag">{{LAYER_1_TAG_C}}</span>
+          </div>
+          <div class="layer-io">{{LAYER_1_INPUT}}<span class="arr">→</span>{{LAYER_1_OUTPUT}}</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-num">L2</div>
+        <div class="layer-content">
+          <div class="layer-name">{{LAYER_2_NAME}}</div>
+          <div class="layer-desc">{{LAYER_2_DESC}}</div>
+          <div class="layer-tags">
+            <span class="layer-tag">{{LAYER_2_TAG_A}}</span>
+            <span class="layer-tag">{{LAYER_2_TAG_B}}</span>
+            <span class="layer-tag">{{LAYER_2_TAG_C}}</span>
+          </div>
+          <div class="layer-io">{{LAYER_2_INPUT}}<span class="arr">→</span>{{LAYER_2_OUTPUT}}</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-num">L3</div>
+        <div class="layer-content">
+          <div class="layer-name">{{LAYER_3_NAME}}</div>
+          <div class="layer-desc">{{LAYER_3_DESC}}</div>
+          <div class="layer-tags">
+            <span class="layer-tag">{{LAYER_3_TAG_A}}</span>
+            <span class="layer-tag">{{LAYER_3_TAG_B}}</span>
+            <span class="layer-tag">{{LAYER_3_TAG_C}}</span>
+          </div>
+          <div class="layer-io">{{LAYER_3_INPUT}}<span class="arr">→</span>{{LAYER_3_OUTPUT}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variables">
+      <div class="variables-label">System Variables</div>
+      <div class="variables-grid">
+        <div class="var-item"><span class="var-key">α</span><span class="var-val">{{VAR_A}}</span></div>
+        <div class="var-item"><span class="var-key">β</span><span class="var-val">{{VAR_B}}</span></div>
+        <div class="var-item"><span class="var-key">γ</span><span class="var-val">{{VAR_C}}</span></div>
+        <div class="var-item"><span class="var-key">δ</span><span class="var-val">{{VAR_D}}</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="brand"><span>Decouple</span>AI</span>
+    <span class="meta">{{COLUMN}} · {{DATE}}</span>
+  </div>
+
+</div>
+</body>
+</html>

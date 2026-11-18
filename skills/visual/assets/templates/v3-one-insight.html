@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DecoupleAI Card — V3 One Insight</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #e8eaed;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 40px 20px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', system-ui, sans-serif;
+}
+
+/* ── Card shell ── */
+.card {
+  width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 16px 48px rgba(0,0,0,0.10);
+}
+
+/* ── Eyebrow ── */
+.eyebrow {
+  padding: 24px 30px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.eyebrow-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #2563eb;
+}
+.eyebrow-col {
+  font-size: 10px; letter-spacing: 1px; color: #cbd5e1; text-transform: uppercase;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 22px 30px 26px;
+  text-align: center;
+}
+.hero-icon-wrap {
+  width: 68px; height: 68px; margin: 0 auto 18px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.hero-title {
+  font-size: 26px; font-weight: 900; color: #0f172a;
+  line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 9px;
+}
+.hero-subtitle {
+  font-size: 13px; color: #64748b; line-height: 1.65;
+  max-width: 340px; margin: 0 auto;
+}
+
+/* ── Core Insight ── */
+.insight-zone {
+  margin: 0 20px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 22px 24px;
+  position: relative; overflow: hidden;
+}
+/* large quote mark */
+.insight-zone::before {
+  content: '\201C';
+  position: absolute; top: -20px; left: 14px;
+  font-size: 120px; font-weight: 900;
+  color: rgba(15,23,42,0.05);
+  line-height: 1; font-family: Georgia, serif;
+  pointer-events: none;
+}
+.insight-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 10px; position: relative;
+}
+.insight-text {
+  font-size: 17px; font-weight: 700; color: #0f172a;
+  line-height: 1.6; position: relative;
+}
+.insight-text .hl { color: #60a5fa; }
+
+/* ── Stats ── */
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin: 0 20px 20px;
+}
+.stat {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.stat-val {
+  font-size: 26px; font-weight: 900; line-height: 1; margin-bottom: 4px;
+}
+.stat-val .unit { font-size: 14px; font-weight: 700; }
+.stat:nth-child(1) .stat-val { color: #2563eb; }
+.stat:nth-child(2) .stat-val { color: #059669; }
+.stat:nth-child(3) .stat-val { color: #7c3aed; }
+.stat-label { font-size: 10.5px; color: #94a3b8; line-height: 1.4; }
+
+/* ── Rule ── */
+.rule {
+  margin: 0 20px 26px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #2563eb;
+  border-radius: 0 10px 10px 0;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.rule-icon {
+  font-size: 16px; flex-shrink: 0; margin-top: 1px;
+}
+.rule-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: #94a3b8; margin-bottom: 4px;
+}
+.rule-text { font-size: 12.5px; color: #374151; line-height: 1.55; font-weight: 500; }
+
+/* ── Footer ── */
+.footer {
+  padding: 13px 24px;
+  border-top: 1px solid #f1f5f9;
+  display: flex; justify-content: space-between; align-items: center;
+  background: #f8fafc;
+}
+.brand { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #cbd5e1; }
+.brand span { color: #2563eb; }
+.meta { font-size: 11px; color: #cbd5e1; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="eyebrow">
+    <span class="eyebrow-tag">一图胜千言</span>
+    <span class="eyebrow-col">{{COLUMN}} · {{DATE}}</span>
+  </div>
+
+  <div class="hero">
+    <!--
+      ⚠️ hero-icon-wrap — 图片需手动替换为微信公众号素材库直链
+      操作步骤：
+        1. 在微信公众号后台「素材管理」上传图片 → 复制图片直链（格式：https://mmbiz.qpic.cn/sz_mmbiz_png/...）
+        2. 将 src="../logo.png" 替换为完整的 mmbiz.qpic.cn 直链
+        3. 参考链接示例：
+           https://mmbiz.qpic.cn/sz_mmbiz_png/cLbcb1UvdATdSPwJia8Wia9s9bvS6lPYVBIjyickkXRtXBEOeQ9ldxUN9gh1sR12IGCWP2jIHj0iatPNkoDZfguMI4aYemqepTYcBFjtaqkU6kU/0?wx_fmt=png&from=appmsg
+        4. 不可修改：style="width:100%;height:100%;object-fit:contain;"
+      本地预览：src="../logo.png" 可正常显示；发布前必须替换为直链。
+    -->
+    <div class="hero-icon-wrap"><img src="../logo.png" alt="logo" style="width:100%;height:100%;object-fit:contain;"></div>
+    <div class="hero-title">{{TITLE}}</div>
+    <div class="hero-subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <div class="insight-zone">
+    <div class="insight-label">Core Insight</div>
+    <div class="insight-text">
+      {{INSIGHT_MAIN}}<span class="hl">{{INSIGHT_HIGHLIGHT}}</span>{{INSIGHT_TAIL}}
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">{{STAT_1_VALUE}}<span class="unit">{{STAT_1_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_1_LABEL}}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">{{STAT_2_VALUE}}<span class="unit">{{STAT_2_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_2_LABEL}}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">{{STAT_3_VALUE}}<span class="unit">{{STAT_3_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_3_LABEL}}</div>
+    </div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-icon">→</div>
+    <div>
+      <div class="rule-label">The One Rule</div>
+      <div class="rule-text">{{ONE_RULE}}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="brand"><span>Decouple</span>AI</span>
+    <span class="meta">智性解耦 · {{COLUMN}}</span>
+  </div>
+
+</div>
+</body>
+</html>

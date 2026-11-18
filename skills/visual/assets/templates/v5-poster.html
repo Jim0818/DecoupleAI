@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DecoupleAI Card — V5 Poster</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #f4f6f8;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 40px 20px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', system-ui, sans-serif;
+}
+
+/* ── Poster shell ── */
+.poster {
+  width: 420px;
+  min-height: 600px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #d8dee6;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 18px 54px rgba(15,23,42,0.14);
+  position: relative;
+}
+
+/* Faint dot grid */
+.poster::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(37,99,235,0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none; z-index: 0;
+}
+
+/* Top glow */
+.glow-top {
+  position: absolute; top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 360px; height: 260px;
+  background: radial-gradient(ellipse, rgba(37,99,235,0.10) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── Top bar ── */
+.topbar {
+  position: relative; z-index: 2;
+  padding: 20px 26px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.topbar-brand {
+  font-size: 9px; font-weight: 700; letter-spacing: 3.5px; text-transform: uppercase;
+  color: #58a6ff;
+}
+.topbar-right { display: flex; align-items: center; gap: 7px; }
+.topbar-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #58a6ff; box-shadow: 0 0 6px #58a6ff;
+}
+.topbar-col { font-size: 9px; color: #64748b; letter-spacing: 1px; }
+
+/* ── Hero ── */
+.hero {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 22px 32px 20px;
+  text-align: center;
+}
+.hero-category {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 20px;
+}
+
+/* Icon box — clean with corner brackets */
+.hero-icon { width: 84px; height: 84px; margin: 0 auto 22px; position: relative; }
+.hero-icon-bg {
+  width: 84px; height: 84px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px;
+}
+/* corner bracket TL */
+.hero-icon::before {
+  content: '';
+  position: absolute; top: -4px; left: -4px;
+  width: 11px; height: 11px;
+  border-top: 2px solid #58a6ff; border-left: 2px solid #58a6ff;
+  border-radius: 2px 0 0 0;
+}
+/* corner bracket BR */
+.hero-icon::after {
+  content: '';
+  position: absolute; bottom: -4px; right: -4px;
+  width: 11px; height: 11px;
+  border-bottom: 2px solid #58a6ff; border-right: 2px solid #58a6ff;
+  border-radius: 0 0 2px 0;
+}
+
+.hero-title {
+  font-size: 30px; font-weight: 900; color: #0f172a;
+  line-height: 1.15; margin-bottom: 11px; letter-spacing: -0.8px;
+}
+.hero-subtitle {
+  font-size: 12.5px; color: #475569; line-height: 1.65;
+  max-width: 300px; margin: 0 auto 22px;
+}
+
+/* Thesis block */
+.thesis {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-align: left; position: relative; overflow: hidden;
+}
+.thesis::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #58a6ff 40%, #3fb950 70%, transparent);
+}
+.thesis-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 6px;
+}
+.thesis-text { font-size: 13.5px; font-weight: 600; color: #334155; line-height: 1.55; }
+
+/* ── Bullets ── */
+.bullets {
+  position: relative; z-index: 2;
+  padding: 0 20px 16px;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.bullet {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+.bullet:nth-child(1) { border-left: 2px solid #58a6ff; }
+.bullet:nth-child(2) { border-left: 2px solid #3fb950; }
+.bullet:nth-child(3) { border-left: 2px solid #bc8cff; }
+.bullet-text { font-size: 12px; color: #334155; line-height: 1.45; }
+
+/* ── Bottom strip ── */
+.strip {
+  position: relative; z-index: 2;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 22px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.strip-brand { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #64748b; }
+.strip-brand span { color: #2563eb; }
+.strip-meta { font-size: 10px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="glow-top"></div>
+
+  <div class="topbar">
+    <span class="topbar-brand">DecoupleAI</span>
+    <div class="topbar-right">
+      <div class="topbar-dot"></div>
+      <span class="topbar-col">{{COLUMN}}</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-category">{{CATEGORY}}</div>
+    <div class="hero-icon">
+      <div class="hero-icon-bg"><img src="../logo.png" alt="logo" style="width:100%;height:100%;object-fit:contain;"></div>
+    </div>
+    <div class="hero-title">{{TITLE}}</div>
+    <div class="hero-subtitle">{{SUBTITLE}}</div>
+    <div class="thesis">
+      <div class="thesis-label">Core Thesis</div>
+      <div class="thesis-text">{{THESIS}}</div>
+    </div>
+  </div>
+
+  <div class="bullets">
+    <div class="bullet"><span class="bullet-text">{{BULLET_1}}</span></div>
+    <div class="bullet"><span class="bullet-text">{{BULLET_2}}</span></div>
+    <div class="bullet"><span class="bullet-text">{{BULLET_3}}</span></div>
+  </div>
+
+  <div class="strip">
+    <span class="strip-brand"><span>Decouple</span>AI</span>
+    <span class="strip-meta">{{DATE}} · {{AUTHOR}}</span>
+  </div>
+</div>
+</body>
+</html>

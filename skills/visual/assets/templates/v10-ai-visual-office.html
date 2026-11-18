@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据STUDIO Card — V10 AI Visual Office</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #f0f2f5;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 40px 20px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', 'HarmonyOS Sans', system-ui, sans-serif;
+}
+
+/* ── Card shell ── */
+.card {
+  width: 540px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 20px 56px rgba(0,0,0,0.09);
+}
+
+/* ── Header ── */
+.header {
+  padding: 24px 28px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative; overflow: hidden;
+}
+.header::after {
+  content: '✦';
+  position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+  font-size: 64px; color: rgba(124,58,237,0.08); pointer-events: none;
+  line-height: 1;
+}
+.header-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #7c3aed; margin-bottom: 10px;
+}
+.header-title {
+  font-size: 20px; font-weight: 800; color: #0f172a;
+  line-height: 1.3; margin-bottom: 6px; letter-spacing: -0.3px;
+}
+.header-subtitle { font-size: 12.5px; color: #475569; line-height: 1.55; }
+
+/* ── Before / After comparison ── */
+.compare-section { padding: 20px 24px 0; }
+.compare-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #94a3b8; margin-bottom: 12px;
+}
+.compare-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center;
+}
+.compare-card {
+  border-radius: 10px; padding: 14px 16px; border: 1px solid;
+}
+.compare-card.before {
+  background: #fef2f2; border-color: #fecaca;
+}
+.compare-card.after {
+  background: #f0fdf4; border-color: #bbf7d0;
+}
+.compare-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.compare-card.before .compare-badge { color: #ef4444; }
+.compare-card.after  .compare-badge { color: #16a34a; }
+.compare-desc { font-size: 11.5px; color: #374151; line-height: 1.55; }
+.compare-arrow {
+  font-size: 20px; color: #a855f7; font-weight: 700;
+  flex-shrink: 0; text-align: center;
+}
+
+/* ── Prompt template block ── */
+.prompt-section { padding: 16px 24px 0; }
+.prompt-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #94a3b8; margin-bottom: 10px;
+}
+.prompt-block {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  border-left: 3px solid #a855f7;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 16px;
+  position: relative;
+}
+.prompt-icon {
+  position: absolute; top: 12px; right: 14px;
+  font-size: 16px; opacity: 0.4;
+}
+.prompt-content {
+  font-size: 12px; color: #4b5563; line-height: 1.7;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  white-space: pre-wrap;
+}
+.prompt-var { color: #7c3aed; font-weight: 600; }
+
+/* ── Steps ── */
+.steps-section { padding: 16px 24px 0; }
+.steps-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #94a3b8; margin-bottom: 12px;
+}
+.step-list { display: flex; flex-direction: column; gap: 8px; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+  padding: 11px 14px;
+}
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: #a855f7; color: white;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.step-body {}
+.step-title { font-size: 12.5px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+.step-desc { font-size: 11px; color: #64748b; line-height: 1.5; }
+
+/* ── Tips ── */
+.tips-section { padding: 14px 24px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.tip {
+  background: #fff7ed; border: 1px solid #fed7aa;
+  border-radius: 20px; padding: 5px 12px;
+  font-size: 11px; color: #92400e; font-weight: 500;
+  display: flex; align-items: center; gap: 5px;
+}
+.tip::before { content: '💡'; font-size: 10px; }
+
+/* ── Result bar ── */
+.result-bar {
+  margin: 16px 24px 0;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1px solid #bbf7d0; border-radius: 10px;
+  padding: 13px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.result-icon { font-size: 22px; flex-shrink: 0; }
+.result-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: #16a34a; margin-bottom: 3px;
+}
+.result-text { font-size: 12.5px; color: #14532d; font-weight: 600; line-height: 1.45; }
+
+/* ── Footer ── */
+.footer {
+  margin-top: 16px;
+  padding: 12px 24px;
+  border-top: 1px solid #f1f5f9;
+  background: #f8fafc;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.brand { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #cbd5e1; }
+.brand span { color: #a855f7; }
+.meta { font-size: 10px; color: #cbd5e1; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">{{COLUMN}} · {{DATE}}</div>
+    <div class="header-title">{{TITLE}}</div>
+    <div class="header-subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <!-- Before / After -->
+  <div class="compare-section">
+    <div class="compare-label">效果对比</div>
+    <div class="compare-grid">
+      <div class="compare-card before">
+        <div class="compare-badge">{{BEFORE_LABEL}}</div>
+        <div class="compare-desc">{{BEFORE_DESC}}</div>
+      </div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-card after">
+        <div class="compare-badge">{{AFTER_LABEL}}</div>
+        <div class="compare-desc">{{AFTER_DESC}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt template -->
+  <div class="prompt-section">
+    <div class="prompt-label">{{PROMPT_LABEL}}</div>
+    <div class="prompt-block">
+      <span class="prompt-icon">✦</span>
+      <div class="prompt-content">{{PROMPT_CONTENT}}</div>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps-section">
+    <div class="steps-label">操作步骤</div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">{{STEP_1_TITLE}}</div>
+          <div class="step-desc">{{STEP_1_DESC}}</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">{{STEP_2_TITLE}}</div>
+          <div class="step-desc">{{STEP_2_DESC}}</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">{{STEP_3_TITLE}}</div>
+          <div class="step-desc">{{STEP_3_DESC}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips (optional — remove section if both tips empty) -->
+  <div class="tips-section">
+    <div class="tip">{{TIP_1}}</div>
+    <div class="tip">{{TIP_2}}</div>
+  </div>
+
+  <!-- Result bar -->
+  <div class="result-bar">
+    <div class="result-icon">✅</div>
+    <div>
+      <div class="result-label">Output</div>
+      <div class="result-text">{{RESULT_DESC}}</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="brand"><span>数据</span>STUDIO</span>
+    <span class="meta">AI 视觉办公 · {{DATE}}</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DecoupleAI Card — V8 Infographic</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #e8eaed;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 40px 20px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', system-ui, sans-serif;
+}
+
+/* ── Card shell — tall vertical format for WeChat/XHS ── */
+.card {
+  width: 440px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08), 0 20px 60px rgba(0,0,0,0.14);
+}
+
+/* ══════════════════════════════════════
+   SECTION 1 — Cover band
+   ══════════════════════════════════════ */
+.cover {
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 36px 32px 32px;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.cover::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(37,99,235,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+.cover::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #58a6ff 40%, #3fb950 70%, transparent);
+}
+
+.cover-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #58a6ff; margin-bottom: 16px; position: relative;
+}
+.cover-emoji {
+  width: 48px; height: 48px; margin: 0 auto 16px; display: block; position: relative;
+}
+.cover-title {
+  font-size: 28px; font-weight: 900; color: #0f172a;
+  line-height: 1.15; letter-spacing: -0.6px; margin-bottom: 10px; position: relative;
+}
+.cover-subtitle {
+  font-size: 12.5px; color: #475569; line-height: 1.65; position: relative;
+}
+
+/* ══════════════════════════════════════
+   SECTION 2 — Misconception vs Truth
+   ══════════════════════════════════════ */
+.correction {
+  display: flex;
+  border-bottom: 1px solid #f1f5f9;
+}
+.corr-wrong, .corr-right {
+  flex: 1; padding: 18px 20px;
+}
+.corr-wrong {
+  background: #fafafa;
+  border-right: 1px solid #f1f5f9;
+}
+.corr-right { background: #f0fdf4; }
+
+.corr-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.corr-wrong .corr-label { color: #d1d5db; }
+.corr-right .corr-label { color: #16a34a; }
+.corr-wrong .corr-text {
+  font-size: 12px; color: #9ca3af;
+  text-decoration: line-through; text-decoration-color: #e5e7eb;
+  line-height: 1.5;
+}
+.corr-right .corr-text { font-size: 12px; color: #0f172a; font-weight: 600; line-height: 1.5; }
+
+/* ══════════════════════════════════════
+   SECTION 3 — Three-step flow
+   ══════════════════════════════════════ */
+.flow { padding: 22px 28px; border-bottom: 1px solid #f1f5f9; }
+.section-header {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #cbd5e1; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-header::after { content: ''; flex: 1; height: 1px; background: #f1f5f9; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; }
+
+.flow-step {
+  display: flex; gap: 14px; align-items: stretch;
+}
+.flow-step-left {
+  display: flex; flex-direction: column; align-items: center; width: 32px; flex-shrink: 0;
+}
+.flow-step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.flow-step:nth-child(1) .flow-step-circle { background: #2563eb; }
+.flow-step:nth-child(2) .flow-step-circle { background: #7c3aed; }
+.flow-step:nth-child(3) .flow-step-circle { background: #059669; }
+
+.flow-step-line {
+  flex: 1; width: 1px; margin: 4px 0;
+  background: linear-gradient(to bottom, #e5e7eb, #f1f5f9);
+}
+.flow-step:last-child .flow-step-line { display: none; }
+
+.flow-step-body { flex: 1; padding: 4px 0 18px; }
+.flow-step-name { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+.flow-step-desc { font-size: 12px; color: #6b7280; line-height: 1.55; }
+.flow-step-tag {
+  display: inline-block; margin-top: 6px;
+  font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 4px; border: 1px solid;
+}
+.flow-step:nth-child(1) .flow-step-tag { color: #2563eb; background: rgba(37,99,235,0.06); border-color: rgba(37,99,235,0.2); }
+.flow-step:nth-child(2) .flow-step-tag { color: #7c3aed; background: rgba(124,58,237,0.06); border-color: rgba(124,58,237,0.2); }
+.flow-step:nth-child(3) .flow-step-tag { color: #059669; background: rgba(5,150,105,0.06); border-color: rgba(5,150,105,0.2); }
+
+/* ══════════════════════════════════════
+   SECTION 4 — Stats row
+   ══════════════════════════════════════ */
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid #f1f5f9;
+}
+.stat-cell {
+  padding: 18px 12px; text-align: center;
+  border-right: 1px solid #f1f5f9;
+  position: relative;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-cell::before {
+  content: '';
+  position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+  border-radius: 0 0 2px 2px;
+}
+.stat-cell:nth-child(1)::before { background: #2563eb; }
+.stat-cell:nth-child(2)::before { background: #059669; }
+.stat-cell:nth-child(3)::before { background: #7c3aed; }
+
+.stat-val {
+  font-size: 26px; font-weight: 900; line-height: 1; margin-bottom: 4px;
+}
+.stat-val .unit { font-size: 14px; font-weight: 700; }
+.stat-cell:nth-child(1) .stat-val { color: #2563eb; }
+.stat-cell:nth-child(2) .stat-val { color: #059669; }
+.stat-cell:nth-child(3) .stat-val { color: #7c3aed; }
+.stat-label { font-size: 10px; color: #94a3b8; line-height: 1.4; }
+
+/* ══════════════════════════════════════
+   SECTION 5 — Analogy / Metaphor
+   ══════════════════════════════════════ */
+.analogy {
+  padding: 18px 28px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex; gap: 14px; align-items: flex-start;
+  background: #fafafa;
+}
+.analogy-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.analogy-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: #16a34a; margin-bottom: 5px;
+}
+.analogy-text { font-size: 13px; color: #374151; line-height: 1.6; font-weight: 500; }
+
+/* ══════════════════════════════════════
+   SECTION 6 — Core insight quote
+   ══════════════════════════════════════ */
+.insight-quote {
+  padding: 22px 28px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.insight-inner {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 18px 22px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.insight-inner::before {
+  content: '\201C';
+  position: absolute; top: -18px; left: 12px;
+  font-size: 100px; color: rgba(15,23,42,0.05);
+  font-family: Georgia, serif; line-height: 1; pointer-events: none;
+}
+.insight-label-inner {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 9px; position: relative;
+}
+.insight-text {
+  font-size: 15px; font-weight: 700; color: #0f172a;
+  line-height: 1.6; position: relative;
+}
+.insight-text .hl { color: #60a5fa; }
+
+/* ══════════════════════════════════════
+   Footer
+   ══════════════════════════════════════ */
+.footer {
+  padding: 13px 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+.brand { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #d1d5db; }
+.brand span { color: #2563eb; }
+.meta { font-size: 10px; color: #cbd5e1; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="cover-tag">{{COLUMN}} · 基石解耦</div>
+    <span class="cover-emoji"><img src="../logo.png" alt="logo" style="width:100%;height:100%;object-fit:contain;"></span>
+    <div class="cover-title">{{TITLE}}</div>
+    <div class="cover-subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <!-- Misconception vs Truth -->
+  <div class="correction">
+    <div class="corr-wrong">
+      <div class="corr-label">✕ 误解</div>
+      <div class="corr-text">{{MISCONCEPTION}}</div>
+    </div>
+    <div class="corr-right">
+      <div class="corr-label">✓ 真相</div>
+      <div class="corr-text">{{TRUTH}}</div>
+    </div>
+  </div>
+
+  <!-- Three-step flow -->
+  <div class="flow">
+    <div class="section-header">三步解耦</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="flow-step-circle">1</div>
+          <div class="flow-step-line"></div>
+        </div>
+        <div class="flow-step-body">
+          <div class="flow-step-name">{{STEP_1_TITLE}}</div>
+          <div class="flow-step-desc">{{STEP_1_DESC}}</div>
+          <span class="flow-step-tag">{{STEP_1_TAG}}</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="flow-step-circle">2</div>
+          <div class="flow-step-line"></div>
+        </div>
+        <div class="flow-step-body">
+          <div class="flow-step-name">{{STEP_2_TITLE}}</div>
+          <div class="flow-step-desc">{{STEP_2_DESC}}</div>
+          <span class="flow-step-tag">{{STEP_2_TAG}}</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-left">
+          <div class="flow-step-circle">3</div>
+          <div class="flow-step-line"></div>
+        </div>
+        <div class="flow-step-body">
+          <div class="flow-step-name">{{STEP_3_TITLE}}</div>
+          <div class="flow-step-desc">{{STEP_3_DESC}}</div>
+          <span class="flow-step-tag">{{STEP_3_TAG}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-cell">
+      <div class="stat-val">{{STAT_1_VALUE}}<span class="unit">{{STAT_1_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_1_LABEL}}</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val">{{STAT_2_VALUE}}<span class="unit">{{STAT_2_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_2_LABEL}}</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val">{{STAT_3_VALUE}}<span class="unit">{{STAT_3_UNIT}}</span></div>
+      <div class="stat-label">{{STAT_3_LABEL}}</div>
+    </div>
+  </div>
+
+  <!-- Analogy -->
+  <div class="analogy">
+    <span class="analogy-icon">💡</span>
+    <div>
+      <div class="analogy-label">一句话类比</div>
+      <div class="analogy-text">{{METAPHOR}}</div>
+    </div>
+  </div>
+
+  <!-- Core Insight -->
+  <div class="insight-quote">
+    <div class="insight-inner">
+      <div class="insight-label-inner">Core Insight</div>
+      <div class="insight-text">{{INSIGHT_MAIN}}<span class="hl">{{INSIGHT_HIGHLIGHT}}</span>{{INSIGHT_TAIL}}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="brand"><span>Decouple</span>AI</span>
+    <span class="meta">{{DATE}}</span>
+  </div>
+
+</div>
+</body>
+</html>

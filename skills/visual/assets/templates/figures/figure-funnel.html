@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure — Funnel (筛选/质量门)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: transparent;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 20px;
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.figure {
+  width: 720px;
+  background: #ffffff;
+  border: 1px solid #d8dee6;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 36px 32px 28px 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.figure-caption {
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.figure-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 28px;
+  letter-spacing: 1px;
+}
+
+.stage {
+  position: relative;
+  margin: 0 auto 8px auto;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 16px 20px;
+  text-align: center;
+  transition: none;
+}
+.stage-1 { width: 100%; border-color: #58a6ff; }
+.stage-2 { width: 82%; border-color: #58a6ff; }
+.stage-3 { width: 64%; border-color: #3fb950; }
+.stage-4 { width: 46%; border-color: #bc8cff; }
+.stage-5 { width: 30%; border-color: #FF8C42; background: #fff7ed; }
+
+.stage-count {
+  display: inline-block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-right: 12px;
+  vertical-align: middle;
+  min-width: 56px;
+  text-align: right;
+}
+.stage-1 .stage-count { color: #58a6ff; }
+.stage-2 .stage-count { color: #58a6ff; }
+.stage-3 .stage-count { color: #3fb950; }
+.stage-4 .stage-count { color: #bc8cff; }
+.stage-5 .stage-count { color: #FF8C42; }
+
+.stage-text {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+}
+.stage-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 2px;
+}
+.stage-desc {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.drop {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #FF8C42;
+  margin: 4px 0 8px 0;
+  text-transform: uppercase;
+}
+.drop::before { content: "↓ "; color: #FF8C42; font-weight: 700; }
+
+.figure-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 11px;
+  color: #6b7280;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+<div class="figure">
+  <div class="figure-caption">{{FIGURE_CAPTION}}</div>
+  <div class="figure-title">{{FIGURE_TITLE}}</div>
+
+  <div class="stage stage-1">
+    <div class="stage-count">{{STAGE_1_COUNT}}</div>
+    <div class="stage-text">
+      <div class="stage-name">{{STAGE_1_NAME}}</div>
+      <div class="stage-desc">{{STAGE_1_DESC}}</div>
+    </div>
+  </div>
+  <div class="drop">{{DROP_1_REASON}}</div>
+
+  <div class="stage stage-2">
+    <div class="stage-count">{{STAGE_2_COUNT}}</div>
+    <div class="stage-text">
+      <div class="stage-name">{{STAGE_2_NAME}}</div>
+      <div class="stage-desc">{{STAGE_2_DESC}}</div>
+    </div>
+  </div>
+  <div class="drop">{{DROP_2_REASON}}</div>
+
+  <div class="stage stage-3">
+    <div class="stage-count">{{STAGE_3_COUNT}}</div>
+    <div class="stage-text">
+      <div class="stage-name">{{STAGE_3_NAME}}</div>
+      <div class="stage-desc">{{STAGE_3_DESC}}</div>
+    </div>
+  </div>
+  <div class="drop">{{DROP_3_REASON}}</div>
+
+  <div class="stage stage-4">
+    <div class="stage-count">{{STAGE_4_COUNT}}</div>
+    <div class="stage-text">
+      <div class="stage-name">{{STAGE_4_NAME}}</div>
+      <div class="stage-desc">{{STAGE_4_DESC}}</div>
+    </div>
+  </div>
+  <div class="drop">{{DROP_4_REASON}}</div>
+
+  <div class="stage stage-5">
+    <div class="stage-count">{{STAGE_5_COUNT}}</div>
+    <div class="stage-text">
+      <div class="stage-name">{{STAGE_5_NAME}}</div>
+      <div class="stage-desc">{{STAGE_5_DESC}}</div>
+    </div>
+  </div>
+
+  <div class="figure-footer">DecoupleAI · 漏斗图</div>
+</div>
+</body>
+</html>

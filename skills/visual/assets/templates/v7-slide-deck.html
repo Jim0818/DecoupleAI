@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DecoupleAI Card — V7 Slide Deck</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #f4f6f8;
+  display: flex; flex-direction: column; align-items: center;
+  min-height: 100vh; padding: 40px 20px; gap: 16px;
+  font-family: 'SF Pro Display', -apple-system, 'PingFang SC', system-ui, sans-serif;
+}
+
+/* ── Slide shell (16:9) ── */
+.slide {
+  width: 640px;
+  height: 360px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(15,23,42,0.14);
+  flex-shrink: 0;
+}
+
+/* Slide number indicator */
+.slide-num {
+  position: absolute; bottom: 14px; right: 18px;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  z-index: 10;
+}
+
+/* ══════════════════════════════════════
+   SLIDE 1 — Title / Cover
+   ══════════════════════════════════════ */
+.slide-1 {
+  background: #ffffff;
+  border: 1px solid #d8dee6;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 50px 56px;
+}
+/* top accent */
+.slide-1::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #58a6ff 40%, #3fb950 70%, transparent);
+}
+.slide-1 .slide-num { color: #94a3b8; }
+
+.s1-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #58a6ff; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.s1-eyebrow::before {
+  content: ''; display: block; width: 24px; height: 1px; background: #58a6ff;
+}
+.s1-title {
+  font-size: 38px; font-weight: 900; color: #0f172a;
+  line-height: 1.1; letter-spacing: -1px; margin-bottom: 16px;
+}
+.s1-subtitle {
+  font-size: 14px; color: #475569; line-height: 1.6; max-width: 400px;
+}
+.s1-brand {
+  position: absolute; bottom: 18px; left: 56px;
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #64748b;
+}
+.s1-brand span { color: #2563eb; }
+
+/* ══════════════════════════════════════
+   SLIDE 2 — Problem / Misconception
+   ══════════════════════════════════════ */
+.slide-2 {
+  background: #fefefe;
+  border: 1px solid #e5e7eb;
+  display: flex;
+}
+.slide-2 .slide-num { color: #cbd5e1; }
+
+/* Left panel — wrong */
+.s2-wrong {
+  width: 50%; height: 100%;
+  background: #fafafa;
+  border-right: 1px solid #e5e7eb;
+  padding: 36px 32px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.s2-wrong::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 8px,
+    rgba(0,0,0,0.015) 8px, rgba(0,0,0,0.015) 16px
+  );
+  pointer-events: none;
+}
+.s2-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.s2-wrong .s2-label { color: #d1d5db; }
+.s2-wrong .s2-text {
+  font-size: 16px; font-weight: 600; color: #9ca3af;
+  line-height: 1.5; text-decoration: line-through; text-decoration-color: #e5e7eb;
+  position: relative;
+}
+
+/* Right panel — truth */
+.s2-right {
+  width: 50%; height: 100%;
+  background: #f0fdf4;
+  padding: 36px 32px;
+  display: flex; flex-direction: column; justify-content: center;
+  border-top: 3px solid #16a34a;
+}
+.s2-right .s2-label { color: #16a34a; }
+.s2-right .s2-text {
+  font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.5;
+}
+
+/* ══════════════════════════════════════
+   SLIDE 3 — Three-step Structure
+   ══════════════════════════════════════ */
+.slide-3 {
+  background: #ffffff;
+  border: 1px solid #d8dee6;
+  display: flex; flex-direction: column;
+  padding: 28px 40px 28px;
+}
+.slide-3 .slide-num { color: #94a3b8; }
+
+.s3-header {
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 20px;
+}
+
+.s3-steps { display: flex; gap: 14px; flex: 1; }
+.s3-step {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px 16px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
+.s3-step::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.s3-step:nth-child(1)::before { background: #58a6ff; }
+.s3-step:nth-child(2)::before { background: #3fb950; }
+.s3-step:nth-child(3)::before { background: #bc8cff; }
+
+.s3-step-num {
+  font-size: 28px; font-weight: 900; line-height: 1; margin-bottom: 10px; opacity: 0.15;
+}
+.s3-step:nth-child(1) .s3-step-num { color: #58a6ff; }
+.s3-step:nth-child(2) .s3-step-num { color: #3fb950; }
+.s3-step:nth-child(3) .s3-step-num { color: #bc8cff; }
+
+.s3-step-name {
+  font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 8px;
+}
+.s3-step-desc { font-size: 11.5px; color: #475569; line-height: 1.55; flex: 1; }
+
+/* ══════════════════════════════════════
+   SLIDE 4 — Takeaway / Insight
+   ══════════════════════════════════════ */
+.slide-4 {
+  background: #fefefe;
+  border: 1px solid #e5e7eb;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 40px 60px;
+  text-align: center;
+}
+.slide-4 .slide-num { color: #cbd5e1; }
+
+.s4-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #94a3b8; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.s4-label::before, .s4-label::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+
+.s4-quote {
+  font-size: 20px; font-weight: 800; color: #0f172a;
+  line-height: 1.4; letter-spacing: -0.3px; margin-bottom: 28px;
+}
+.s4-quote .hl { color: #2563eb; }
+
+.s4-footer {
+  display: flex; gap: 24px; align-items: center;
+}
+.s4-stat {
+  text-align: center;
+}
+.s4-stat-val { font-size: 22px; font-weight: 900; color: #2563eb; line-height: 1; }
+.s4-stat-val:nth-child(1) { color: #2563eb; }
+.s4-stat-label { font-size: 10px; color: #94a3b8; margin-top: 3px; }
+.s4-divider { width: 1px; height: 32px; background: #e5e7eb; }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide slide-1">
+  <div class="s1-eyebrow">{{COLUMN}}</div>
+  <div class="s1-title">{{TITLE}}</div>
+  <div class="s1-subtitle">{{SUBTITLE}}</div>
+  <div class="s1-brand"><span>Decouple</span>AI</div>
+  <div class="slide-num">01 / 04</div>
+</div>
+
+<!-- SLIDE 2: Problem vs Truth -->
+<div class="slide slide-2">
+  <div class="s2-wrong">
+    <div class="s2-label">✕ 大众误解</div>
+    <div class="s2-text">{{MISCONCEPTION}}</div>
+  </div>
+  <div class="s2-right">
+    <div class="s2-label">✓ 实际真相</div>
+    <div class="s2-text">{{TRUTH}}</div>
+  </div>
+  <div class="slide-num">02 / 04</div>
+</div>
+
+<!-- SLIDE 3: Three-step Structure -->
+<div class="slide slide-3">
+  <div class="s3-header">三步解耦 · Structure</div>
+  <div class="s3-steps">
+    <div class="s3-step">
+      <div class="s3-step-num">01</div>
+      <div class="s3-step-name">{{STEP_1_TITLE}}</div>
+      <div class="s3-step-desc">{{STEP_1_DESC}}</div>
+    </div>
+    <div class="s3-step">
+      <div class="s3-step-num">02</div>
+      <div class="s3-step-name">{{STEP_2_TITLE}}</div>
+      <div class="s3-step-desc">{{STEP_2_DESC}}</div>
+    </div>
+    <div class="s3-step">
+      <div class="s3-step-num">03</div>
+      <div class="s3-step-name">{{STEP_3_TITLE}}</div>
+      <div class="s3-step-desc">{{STEP_3_DESC}}</div>
+    </div>
+  </div>
+  <div class="slide-num">03 / 04</div>
+</div>
+
+<!-- SLIDE 4: Takeaway -->
+<div class="slide slide-4">
+  <div class="s4-label">Core Takeaway</div>
+  <div class="s4-quote">{{INSIGHT_MAIN}}<span class="hl">{{INSIGHT_HIGHLIGHT}}</span>{{INSIGHT_TAIL}}</div>
+  <div class="s4-footer">
+    <div class="s4-stat">
+      <div class="s4-stat-val">{{STAT_1_VALUE}}<span style="font-size:14px">{{STAT_1_UNIT}}</span></div>
+      <div class="s4-stat-label">{{STAT_1_LABEL}}</div>
+    </div>
+    <div class="s4-divider"></div>
+    <div class="s4-stat">
+      <div class="s4-stat-val" style="color:#059669">{{STAT_2_VALUE}}<span style="font-size:14px">{{STAT_2_UNIT}}</span></div>
+      <div class="s4-stat-label">{{STAT_2_LABEL}}</div>
+    </div>
+    <div class="s4-divider"></div>
+    <div class="s4-stat">
+      <div class="s4-stat-val" style="color:#7c3aed">{{STAT_3_VALUE}}<span style="font-size:14px">{{STAT_3_UNIT}}</span></div>
+      <div class="s4-stat-label">{{STAT_3_LABEL}}</div>
+    </div>
+  </div>
+  <div class="slide-num">04 / 04</div>
+</div>
+
+</body>
+</html>

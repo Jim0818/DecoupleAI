@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure — Linear Progression</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: transparent;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 20px;
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+.figure {
+  width: 760px;
+  background: #ffffff;
+  border: 1px solid #d8dee6;
+  border-radius: 12px;
+  padding: 30px 34px 24px;
+  box-shadow: 0 4px 24px rgba(15,23,42,0.10);
+}
+.figure-caption {
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: #64748b; margin-bottom: 8px;
+}
+.figure-title {
+  font-size: 22px; font-weight: 800; color: #0f172a;
+  margin-bottom: 24px; line-height: 1.25;
+}
+.track {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  position: relative;
+}
+.track::before {
+  content: ''; position: absolute; left: 10%; right: 10%; top: 18px; height: 2px;
+  background: linear-gradient(90deg, #60a5fa, #34d399, #a78bfa, #fb923c);
+}
+.step {
+  position: relative; z-index: 1;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 46px 14px 14px;
+  min-height: 150px;
+}
+.dot {
+  position: absolute; top: 7px; left: 14px;
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #ffffff; font-size: 11px; font-weight: 800;
+}
+.step:nth-child(1) .dot { background: #2563eb; }
+.step:nth-child(2) .dot { background: #059669; }
+.step:nth-child(3) .dot { background: #7c3aed; }
+.step:nth-child(4) .dot { background: #ea580c; }
+.step-label {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #94a3b8; margin-bottom: 6px;
+}
+.step-title {
+  font-size: 15px; font-weight: 700; color: #111827;
+  line-height: 1.3; margin-bottom: 7px;
+}
+.step-desc {
+  font-size: 12px; color: #475569; line-height: 1.55;
+}
+.figure-footer {
+  margin-top: 18px; padding-top: 12px; border-top: 1px solid #e5e7eb;
+  text-align: center; font-size: 11px; color: #94a3b8; letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+<div class="figure">
+  <div class="figure-caption">{{FIGURE_CAPTION}}</div>
+  <div class="figure-title">{{FIGURE_TITLE}}</div>
+  <div class="track">
+    <div class="step">
+      <div class="dot">1</div>
+      <div class="step-label">{{STEP_1_LABEL}}</div>
+      <div class="step-title">{{STEP_1_TITLE}}</div>
+      <div class="step-desc">{{STEP_1_DESC}}</div>
+    </div>
+    <div class="step">
+      <div class="dot">2</div>
+      <div class="step-label">{{STEP_2_LABEL}}</div>
+      <div class="step-title">{{STEP_2_TITLE}}</div>
+      <div class="step-desc">{{STEP_2_DESC}}</div>
+    </div>
+    <div class="step">
+      <div class="dot">3</div>
+      <div class="step-label">{{STEP_3_LABEL}}</div>
+      <div class="step-title">{{STEP_3_TITLE}}</div>
+      <div class="step-desc">{{STEP_3_DESC}}</div>
+    </div>
+    <div class="step">
+      <div class="dot">4</div>
+      <div class="step-label">{{STEP_4_LABEL}}</div>
+      <div class="step-title">{{STEP_4_TITLE}}</div>
+      <div class="step-desc">{{STEP_4_DESC}}</div>
+    </div>
+  </div>
+  <div class="figure-footer">DecoupleAI · 过程线</div>
+</div>
+</body>
+</html>

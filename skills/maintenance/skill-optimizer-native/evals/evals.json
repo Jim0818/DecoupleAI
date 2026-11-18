@@ -1,0 +1,21 @@
+{
+  "execution": "manual_forward_review",
+  "note": "These cases check Skill decisions, not script behavior. Executable auditor regressions are in tests/test_audit_skill.py.",
+  "cases": [
+    {
+      "name": "update-existing-skill",
+      "request": "更新一个现有 Agent SKILL.md，修复与当前 v4.2 Schema 不一致的输出说明。",
+      "expected_behavior": "检查当前 phase Schema、Engine 派发、消费者和旧版回放边界；直接实施授权的修复，验证相关用例和审计，不强制先停在计划。"
+    },
+    {
+      "name": "new-agent-admission",
+      "request": "为已有 mode 能完成的校验另建一个常驻 Agent。",
+      "expected_behavior": "先按宪法 §5 证明独立上下文或失败语义与边际贡献；证据不足时复用 mode、脚本或 reference，不新增默认编排单元。"
+    },
+    {
+      "name": "structural-audit-limit",
+      "request": "审计器报告 ERROR=0，是否可以认定 Skill 的行为质量通过？",
+      "expected_behavior": "说明结构审计仅覆盖机械事实；Codex Skill 另跑可用的平台校验，模型行为仍需用真实任务和可观察结果验证。"
+    }
+  ]
+}

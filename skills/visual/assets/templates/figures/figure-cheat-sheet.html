@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure — Cheat Sheet Card (速查卡)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: transparent;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 20px;
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.figure {
+  width: 760px;
+  background: #ffffff;
+  border: 1px solid #d8dee6;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 32px 28px 24px 28px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+
+.figure-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.figure-caption {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+.figure-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 1px;
+  flex: 1;
+  text-align: left;
+  margin-right: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.cheat-card {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-top: 3px solid #58a6ff;
+  border-radius: 8px;
+  padding: 16px 18px;
+  position: relative;
+}
+.cheat-card:nth-child(2) { border-top-color: #3fb950; }
+.cheat-card:nth-child(3) { border-top-color: #bc8cff; }
+.cheat-card:nth-child(4) { border-top-color: #FF8C42; }
+.cheat-card:nth-child(5) { border-top-color: #58a6ff; }
+.cheat-card:nth-child(6) { border-top-color: #3fb950; }
+
+.cheat-index {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
+.cheat-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+  padding-right: 28px;
+  line-height: 1.3;
+}
+.cheat-body {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.55;
+}
+.cheat-rule {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+  font-style: italic;
+}
+
+.figure-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 11px;
+  color: #6b7280;
+  letter-spacing: 1px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+</style>
+</head>
+<body>
+<div class="figure">
+  <div class="figure-header">
+    <div class="figure-title">{{FIGURE_TITLE}}</div>
+    <div class="figure-caption">{{FIGURE_CAPTION}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="cheat-card">
+      <div class="cheat-index">01</div>
+      <div class="cheat-title">{{ITEM_1_TITLE}}</div>
+      <div class="cheat-body">{{ITEM_1_BODY}}</div>
+      <div class="cheat-rule">{{ITEM_1_RULE}}</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-index">02</div>
+      <div class="cheat-title">{{ITEM_2_TITLE}}</div>
+      <div class="cheat-body">{{ITEM_2_BODY}}</div>
+      <div class="cheat-rule">{{ITEM_2_RULE}}</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-index">03</div>
+      <div class="cheat-title">{{ITEM_3_TITLE}}</div>
+      <div class="cheat-body">{{ITEM_3_BODY}}</div>
+      <div class="cheat-rule">{{ITEM_3_RULE}}</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-index">04</div>
+      <div class="cheat-title">{{ITEM_4_TITLE}}</div>
+      <div class="cheat-body">{{ITEM_4_BODY}}</div>
+      <div class="cheat-rule">{{ITEM_4_RULE}}</div>
+    </div>
+  </div>
+
+  <div class="figure-footer">DecoupleAI · 速查卡</div>
+</div>
+</body>
+</html>
