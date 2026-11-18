@@ -177,6 +177,86 @@ def test_cli_explicit_empty_skills_preserve_the_supervisors_selection(cli_projec
     assert result['skill_ids'] == ['writing']
 
 
+def test_file_and_source_url_reach_handoff_and_file_changes_block_submission(cli_project):
+    root, invoke = cli_project
+    source = root / 'source.md'
+    source.write_text('FROZEN_SOURCE_BODY')
+    selected = {
+        'path': 'source.md', 'url': 'https://example.org/original',
+        'purpose': 'style_reference', 'selection_reason': 'Explain the transition between examples',
+        'label': 'Selected excerpt', 'approval_ref': 'user-feedback-reference',
+        'version_scope': 'article_content',
+    }
+    spec = root / 'task.json'
+    spec.write_text(json.dumps({'role': 'writer', 'goal': 'Use the selected local material',
+                               'input_refs': [selected], 'allowed_write_roots': ['result.md']}))
+    invoke('start', 'file-source', 'Use a frozen reference', '--account', 'studio')
+    invoke('add-task', 'file-source', '--id', 'write', '--spec', str(spec))
+    job = invoke('dispatch', 'file-source', 'write')
+    handoff = json.loads(Path(job['handoff_path']).read_text())
+    ref = handoff['context']['task']['input_refs'][0]
+    assert ref['path'] == str(source)
+    for key in ('url', 'purpose', 'selection_reason', 'label', 'approval_ref', 'version_scope'):
+        assert ref[key] == selected[key]
+    assert ref['verification'] == 'not_fetched'
+    resources = [r for r in handoff['context']['resources'] if r['kind'] == 'input']
+    assert [r['path'] for r in resources] == [str(source)]
+    assert 'FROZEN_SOURCE_BODY' not in handoff['prompt']
+    task = invoke('task', 'file-source', 'write')
+    assert set(task['dispatch']['input_versions']) == {'source.md'}
+    assert task['dispatch']['input_versions']['source.md']['version_scope'] == 'article_content'
+    stage = Path(job['staging_dir'])
+    (stage / 'result.md').write_text('Output based on the earlier frozen material')
+    source.write_text('CHANGED_SOURCE_BODY')
+    result = root / 'result.json'
+    result.write_text(json.dumps({'outputs': [{'staged_path': 'result.md', 'target_path': 'result.md'}]}))
+    rejected = invoke('submit', 'file-source', 'write', '--token', handoff['token'],
+                      '--result', str(result), success=False)
+    assert rejected['error'] == 'input_conflict'
+    assert not (root / 'result.md').exists()
+
+
+@pytest.mark.parametrize('reference,message', [
+    ({'url': 'https://example.org/source'}, 'project file path'),
+    ('https://example.org/source', 'project file path'),
+    ({'path': '', 'url': 'https://example.org/source'}, 'project file path'),
+    ({'path': 'source.md', 'url': 'https://'}, 'Invalid source URL'),
+])
+def test_preview_and_cli_reject_unusable_source_references(cli_project, reference, message):
+    from textpicos.context import ContextError, assemble_context
+    from textpicos.maintenance.eval_skill import prepare_evaluation
+
+    root, invoke = cli_project
+    (root / 'source.md').write_text('Local source')
+    task = {'role': 'writer', 'goal': 'Use supplied material', 'input_refs': [reference]}
+    paths = ProjectPaths.from_root(root)
+    with pytest.raises(ContextError, match=message):
+        assemble_context(paths, task)
+    with pytest.raises(ValueError, match=message):
+        prepare_evaluation(paths, task)
+    invoke('start', 'invalid-reference', 'Use supplied material')
+    spec = root / 'task.json'
+    spec.write_text(json.dumps(task))
+    error = invoke('add-task', 'invalid-reference', '--id', 'write', '--spec', str(spec), success=False)
+    assert message in error['message']
+    if message == 'project file path':
+        assert 'task goal' in error['message']
+    assert invoke('status', 'invalid-reference', '--verbose')['tasks'] == {}
+
+
+@pytest.mark.parametrize('outside', [False, True])
+def test_source_url_cannot_mask_maintenance_or_project_boundary(cli_project, outside):
+    root, invoke = cli_project
+    selected = str(root.parent / 'outside.md') if outside else 'articles/unread.md'
+    spec = root / 'task.json'
+    spec.write_text(json.dumps({'role': 'writer', 'goal': 'Use a reference', 'input_refs': [
+        {'path': selected, 'url': 'https://example.org/source'}]}))
+    invoke('start', 'source-boundary', 'Use only permitted files')
+    error = invoke('add-task', 'source-boundary', '--id', 'write', '--spec', str(spec), success=False)
+    assert ('outside the project' if outside else 'excluded') in error['message']
+    assert invoke('status', 'source-boundary', '--verbose')['tasks'] == {}
+
+
 def test_no_ready_does_not_mean_completed(cli_project):
     root, invoke = cli_project
     invoke('start', 'waiting', 'Needs a user decision', '--account', 'studio')

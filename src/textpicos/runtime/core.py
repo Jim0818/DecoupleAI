@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+from textpicos.context import ContextError, normalize_input_reference
+
 from .storage import atomic_json, durable_copy, file_lock, file_version, replace_from_copy
 
 
@@ -166,7 +168,10 @@ class Runtime:
     def _inputs(self, values: Iterable) -> list[dict]:
         result, scopes = [], {}
         for value in values:
-            item = {"path": value} if isinstance(value, (str, Path)) else dict(value)
+            try:
+                item = normalize_input_reference(value)
+            except ContextError as exc:
+                raise StateError("invalid_input_reference", str(exc)) from exc
             scope = item.get("version_scope", "file")
             if scope not in ("file", "article_content"):
                 raise StateError("invalid_version_scope", "Input version_scope must be file or article_content")

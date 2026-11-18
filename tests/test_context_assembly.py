@@ -198,13 +198,39 @@ class ContextAssemblyTests(unittest.TestCase):
         self.assertNotIn("ORIGINAL_BODY_SENTINEL", prompt)
 
     def test_reference_labels_do_not_fetch_or_confirm_external_sources(self):
+        source = self.write("selected/author-post.md", "FROZEN_REFERENCE_BODY")
         result = self.assemble({"input_refs": [{
+            "path": str(source),
             "url": "https://example.org/author-post", "purpose": "style_reference",
             "label": "A useful explanation, not author context",
+            "selection_reason": "How the explanation develops",
         }]})
         ref = result["task"]["input_refs"][0]
+        self.assertEqual(ref["path"], str(source))
+        self.assertEqual(ref["url"], "https://example.org/author-post")
         self.assertEqual(ref["purpose"], "style_reference")
+        self.assertEqual(ref["selection_reason"], "How the explanation develops")
         self.assertEqual(ref["verification"], "not_fetched")
+        resource = next(item for item in result["resources"] if item["kind"] == "input")
+        self.assertEqual(resource["path"], str(source))
+        self.assertIn("provenance only", resource["read_scopes"][0])
+        self.assertNotIn("FROZEN_REFERENCE_BODY", context_prompt(result))
+
+    def test_source_url_cannot_replace_a_missing_selected_file(self):
+        selected = {"path": "missing.md", "url": "https://example.org/source"}
+        with self.assertRaisesRegex(ContextError, "Required input"):
+            self.assemble({"input_refs": [selected]})
+        result = self.assemble({"input_refs": [{**selected, "required": False}]})
+        self.assertEqual(result["task"]["input_refs"], [])
+        self.assertEqual(result["warnings"][0]["kind"], "optional_reference_missing")
+
+    def test_invalid_source_urls_are_not_silently_ignored_when_a_file_exists(self):
+        source = self.write("selected/source.md", "selected source")
+        for url in [None, "", "ftp://example.org/source", "https://",
+                    "https://exa mple.org/source", "https://example.org:bad/source", "https://[bad",
+                    "https://example.org/\x00source"]:
+            with self.subTest(url=url), self.assertRaisesRegex(ContextError, "Invalid source URL"):
+                self.assemble({"input_refs": [{"path": str(source), "url": url}]})
 
     def test_custom_reference_purpose_remains_available_without_a_fixed_taxonomy(self):
         self.write("selected/source.md", "source")
@@ -239,9 +265,12 @@ class ContextAssemblyTests(unittest.TestCase):
         self.assertEqual(result["resources"][-1]["type"], "directory")
         self.assertFalse(result["load_policy"]["expand_directories"])
 
-    def test_urls_remain_unfetched_source_references(self):
-        result = self.assemble({"input_refs": ["https://example.org/docs"]})
-        self.assertEqual(result["task"]["input_refs"][0]["verification"], "not_fetched")
+    def test_url_only_and_empty_paths_require_selected_material(self):
+        for reference in ["https://example.org/docs", {"url": "https://example.org/docs"},
+                          {"path": "", "url": "https://example.org/docs"},
+                          {"path": "  "}, {"path": None}]:
+            with self.subTest(reference=reference), self.assertRaisesRegex(ContextError, "project file path"):
+                self.assemble({"input_refs": [reference]})
 
 
 if __name__ == "__main__":

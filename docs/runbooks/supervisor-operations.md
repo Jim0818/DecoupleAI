@@ -46,10 +46,14 @@ token 关联本次任务尝试，不宣称独立身份认证。submit 比较派�
 {
   "input_refs": [
     {"path":"resources/inbox/source.md","purpose":"draft"},
-    {"path":"resources/inbox/reference.md","purpose":"style_reference","selection_reason":"参考其如何用具体操作推进解释"}
+    {"path":"resources/inbox/reference.md","url":"https://example.org/original","purpose":"style_reference","selection_reason":"参考其如何用具体操作推进解释"}
   ]
 }
 ~~~
+
+`path` 指向实际选定的项目文件，也是派发和提交时比较的输入版本。可同时附上绝对 HTTP(S) `url` 记录原文来路；装配器读取文件引用，保留 URL 并标记 `verification: not_fetched`，不会自动抓取网页，也不会因此认定材料仍是最新版本。事实是否核验，由所选材料中的来源和实际研究记录说明。
+
+仅有 URL 的 `input_refs` 会在上下文预览、评估和任务登记时拒绝。需要研究网页时，把待获取的 URL 与研究目标交给 Research；取得可用的项目材料后，再作为下游任务输入。附了 URL 也不能替代缺失的必需文件，或绕过项目路径与维护范围限制。
 
 ### 输入版本与局部续改
 

@@ -16,6 +16,43 @@ class ContextError(ValueError):
     """A requested role, method, or input cannot be assembled faithfully."""
 
 
+def normalize_input_reference(value: Any) -> dict[str, Any]:
+    """Validate reference shape without reading a file or fetching a URL.
+
+    A URL describes the origin of a selected file; it never substitutes for
+    that file. Path containment and maintenance exclusions remain with the
+    caller so this helper does not probe a protected or external location.
+    """
+    if isinstance(value, (str, Path)):
+        text = str(value)
+        is_url = "://" in text or text.lower().startswith(("http:", "https:"))
+        spec = {"url": text} if is_url else {"path": value}
+    elif isinstance(value, Mapping):
+        spec = dict(value)
+    else:
+        raise ContextError("Invalid input reference; expected a file path or reference object")
+    if "url" in spec:
+        url = spec["url"]
+        try:
+            if (not isinstance(url, str) or not url
+                    or any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in url)):
+                raise ValueError
+            parsed = urlparse(url)
+            if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+                raise ValueError
+            parsed.port  # Reject malformed or out-of-range ports as well.
+        except ValueError as exc:
+            raise ContextError("Invalid source URL; expected an absolute HTTP(S) URL") from exc
+    path = spec.get("path")
+    if (not isinstance(path, (str, Path)) or not str(path).strip()
+            or "://" in str(path) or str(path).lower().startswith(("http:", "https:"))):
+        raise ContextError(
+            "Input references require a nonempty project file path; obtain the material "
+            "in the project first. For research, put a URL to fetch in the task goal."
+        )
+    return spec
+
+
 def _within(path: Path, parent: Path) -> bool:
     try:
         path.relative_to(parent)
@@ -75,9 +112,9 @@ def assemble_context(
 
     ``exclusions`` is an explicit maintenance/test scope. Ordinary production
     may use a user-selected article path; no article directory is ever scanned.
-    Input refs are strings or dictionaries with ``path``/``url`` and optional
-    ``required``. Purpose and approval provenance remain task data, not proof
-    of author experience or user approval. Selected directories are not expanded.
+    Input refs require a file ``path`` and may include an unfetched source
+    ``url``. Purpose and approval provenance remain task data, not proof of
+    author experience or user approval. Selected directories are not expanded.
     """
     if not isinstance(task, Mapping):
         raise ContextError("task must be a mapping")
@@ -216,13 +253,7 @@ def assemble_context(
         raise ContextError("input_refs must be a list, reference, or path")
     inputs: list[dict[str, Any]] = []
     for index, ref in enumerate(input_refs):
-        if isinstance(ref, (str, Path)):
-            value = str(ref)
-            spec = {"url": value} if urlparse(value).scheme in {"http", "https"} else {"path": value}
-        elif isinstance(ref, Mapping):
-            spec = dict(ref)
-        else:
-            raise ContextError(f"Invalid input reference at index {index}")
+        spec = normalize_input_reference(ref)
         annotations = {
             key: spec[key] for key in (
                 "version", "digest", "label", "purpose", "selection_reason",
@@ -239,13 +270,8 @@ def assemble_context(
             "approved_edit": "read the edit pair and verify explicit user approval provenance before adopting a preference",
         }.get(purpose, "only as required for the assigned task")
         if "url" in spec:
-            parsed = urlparse(str(spec["url"]))
-            if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-                raise ContextError(f"Invalid source URL at index {index}")
-            inputs.append({"kind": "source_url", "url": spec["url"], "verification": "not_fetched", **annotations})
-            continue
-        if not isinstance(spec.get("path"), (str, Path)) or not str(spec["path"]):
-            raise ContextError(f"Input reference {index} requires a path or URL")
+            annotations.update(url=spec["url"], verification="not_fetched")
+            read_scope += "; read this selected file; the source URL is provenance only and has not been fetched"
         item = add_file(f"input:{index}", spec["path"], "input", required=spec.get("required", True), registered=False, read_scope=read_scope)
         if item is not None:
             inputs.append({"resource_id": item["id"], "path": item["path"], **annotations})
