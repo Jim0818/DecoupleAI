@@ -1,0 +1,140 @@
+<!--
+  ui-view-render :: Skill Archive Card (reference template)
+  Pattern: 30-second decision card for Skill-evaluation articles
+  Fields: name / type / platforms / learning_curve / recommendation / target_audience / oneliner
+  Mode: bright + label-grid
+  Use class prefix: uvr-skarchive-
+-->
+<section class="uvr-skarchive-wrap">
+  <style>
+    .uvr-skarchive-wrap {
+      max-width: 760px;
+      margin: 20px auto 28px;
+      font-family: 'PingFang SC', system-ui, -apple-system, sans-serif;
+    }
+    .uvr-skarchive-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 26px 28px 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.06);
+      border-left: 5px solid #2563eb;
+    }
+    .uvr-skarchive-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .uvr-skarchive-head {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .uvr-skarchive-name {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+    }
+    .uvr-skarchive-type {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      text-transform: uppercase;
+    }
+    .uvr-skarchive-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 560px) {
+      .uvr-skarchive-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .uvr-skarchive-field {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .uvr-skarchive-field-label {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .uvr-skarchive-field-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.5;
+    }
+    .uvr-skarchive-stars {
+      color: #f59e0b;
+      letter-spacing: 1px;
+    }
+    .uvr-skarchive-stars-dim { color: #e2e8f0; }
+    .uvr-skarchive-platforms {
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 14px;
+    }
+    .uvr-skarchive-platforms strong {
+      color: #64748b;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-right: 6px;
+    }
+    .uvr-skarchive-oneliner {
+      font-size: 15px;
+      font-style: italic;
+      color: #1e293b;
+      line-height: 1.6;
+      padding: 12px 14px;
+      border-left: 3px solid #cbd5e1;
+      background: #f1f5f9;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+  <article class="uvr-skarchive-card">
+    <div class="uvr-skarchive-eyebrow">Skill 档案 · 30 秒决策</div>
+    <div class="uvr-skarchive-head">
+      <span class="uvr-skarchive-name">Superpowers</span>
+      <span class="uvr-skarchive-type">Claude Skill</span>
+    </div>
+    <div class="uvr-skarchive-platforms">
+      <strong>适用平台</strong>Claude Code / Cursor / Cline
+    </div>
+    <div class="uvr-skarchive-grid">
+      <div class="uvr-skarchive-field">
+        <div class="uvr-skarchive-field-label">上手难度</div>
+        <div class="uvr-skarchive-field-value">
+          <span class="uvr-skarchive-stars">★★★★</span><span class="uvr-skarchive-stars uvr-skarchive-stars-dim">★</span>
+        </div>
+      </div>
+      <div class="uvr-skarchive-field">
+        <div class="uvr-skarchive-field-label">推荐指数</div>
+        <div class="uvr-skarchive-field-value">
+          <span class="uvr-skarchive-stars">★★★</span><span class="uvr-skarchive-stars uvr-skarchive-stars-dim">★★</span>
+        </div>
+      </div>
+      <div class="uvr-skarchive-field">
+        <div class="uvr-skarchive-field-label">适合人群</div>
+        <div class="uvr-skarchive-field-value">全栈开发 / 写测试的人</div>
+      </div>
+    </div>
+    <div class="uvr-skarchive-oneliner">
+      根治"AI 代码看着对但跑不动"的最完整开源框架，但 300K token 起步、需要熟悉 TDD。
+    </div>
+  </article>
+</section>

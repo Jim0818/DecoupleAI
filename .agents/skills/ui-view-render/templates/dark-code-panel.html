@@ -1,0 +1,72 @@
+<!--
+  ui-view-render :: Dark Code Panel (reference template)
+  Pattern: file-tree / system-architecture / "底层逻辑"
+  Mode: dark
+  Use class prefix: uvr-darkpanel-
+-->
+<section class="uvr-darkpanel-wrap">
+  <style>
+    .uvr-darkpanel-wrap {
+      max-width: 720px;
+      margin: 24px auto;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 28px 32px;
+      font-family: 'SF Mono', 'JetBrains Mono', Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .uvr-darkpanel-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .uvr-darkpanel-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 18px;
+      font-family: 'PingFang SC', system-ui, sans-serif;
+    }
+    .uvr-darkpanel-tree { list-style: none; padding-left: 0; margin: 0; }
+    .uvr-darkpanel-tree ul {
+      list-style: none;
+      padding-left: 20px;
+      margin: 4px 0;
+      border-left: 1px dashed #334155;
+    }
+    .uvr-darkpanel-node { padding: 3px 0; }
+    .uvr-darkpanel-node--root { color: #86efac; }
+    .uvr-darkpanel-node--schema { color: #fdba74; }
+    .uvr-darkpanel-node--leaf { color: #cbd5e1; }
+    .uvr-darkpanel-annot {
+      color: #64748b;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+  </style>
+  <div class="uvr-darkpanel-eyebrow">Pipeline Architecture</div>
+  <div class="uvr-darkpanel-title">DecoupleAI · 13-Agent 主流水线契约层</div>
+  <ul class="uvr-darkpanel-tree">
+    <li class="uvr-darkpanel-node uvr-darkpanel-node--root">agents/
+      <ul>
+        <li class="uvr-darkpanel-node uvr-darkpanel-node--leaf">decouple-chief-editor/
+          <ul>
+            <li class="uvr-darkpanel-node uvr-darkpanel-node--schema">schema/input.schema.json <span class="uvr-darkpanel-annot">// validated by workflow-manager</span></li>
+            <li class="uvr-darkpanel-node uvr-darkpanel-node--schema">schema/output.schema.json</li>
+            <li class="uvr-darkpanel-node uvr-darkpanel-node--leaf">SKILL.md</li>
+          </ul>
+        </li>
+        <li class="uvr-darkpanel-node uvr-darkpanel-node--leaf">decouple-decoupler/
+          <ul>
+            <li class="uvr-darkpanel-node uvr-darkpanel-node--schema">schema/output.schema.json <span class="uvr-darkpanel-annot">// material_word_count ≥ 3000</span></li>
+          </ul>
+        </li>
+        <li class="uvr-darkpanel-node uvr-darkpanel-node--leaf">decouple-architect/ <span class="uvr-darkpanel-annot">// emits target_word_count per segment</span></li>
+      </ul>
+    </li>
+  </ul>
+</section>

@@ -5,8 +5,7 @@ Reports *mechanical* facts about a skill (line count,
 frontmatter completeness, presence of examples/tables/checklists, bundled
 scripts/references, evaluation cases, hardcoded-secret heuristics, risky shell
 ops). It does NOT judge quality — "is the description good?", "are the examples
-right?" are LLM-territory. Frontmatter and budgets use the repository's
-bundled PyYAML. For repository skills, line budgets come from
+right?" are LLM-territory. Frontmatter and budgets use PyYAML installed in the project's Python environment. For repository skills, line budgets come from
 config/system/complexity-budget.yaml; external skills have no local
 line budget. This is not a substitute for the host's Skill validator.
 
@@ -35,11 +34,10 @@ REPO_ROOT = next((parent for parent in Path(__file__).resolve().parents if (pare
 if REPO_ROOT is None:
     raise SystemExit("ERROR: TextPicOS capability registry not found above the native audit tool")
 BUDGET_PATH = REPO_ROOT / "config/system/complexity-budget.yaml"
-sys.path.insert(0, str(REPO_ROOT / "scripts/_deps"))
 try:
     import yaml
 except ImportError as exc:
-    raise SystemExit(f"ERROR: 无法加载仓库 YAML 解析器: {exc}") from exc
+    raise SystemExit(f"ERROR: 无法加载 PyYAML，请在已配置项目依赖的 Python 环境中执行: {exc}") from exc
 
 NAME_MAX_CHARS = 64
 DESCRIPTION_MAX_CHARS = 1024
@@ -141,7 +139,7 @@ def line_budget(skill_md: Path) -> tuple[int, int] | None:
     parts = rel.parts
     if parts[0] == "agents":
         key = "incubating_agent_skill_lines" if "_incubating" in parts else "production_agent_skill_lines"
-    elif parts[0] in {"skills", "skill-optimizer-native"} or parts[:2] in {
+    elif parts[0] == "skills" or parts[:2] in {
         (".agents", "skills"), (".claude", "skills")
     }:
         key = "tool_skill_lines"

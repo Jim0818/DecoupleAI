@@ -1,19 +1,19 @@
 # TextPicOS Skill 撰写规范
 
 本文件只说明本仓库 Skill、Agent 与函数型桥接的撰写选择。原则以
-[AI-Native 治理宪法](../../../../docs/AI-Native治理宪法.md) 为准；事实所有权与路径以
-`workflows/governance/source-registry.yaml` 为准；运行契约以相应 Schema、Engine 派发和执行器为准。
+[AI-Native 治理宪法](../../../../config/policies/AI-Native治理宪法.md) 为准；事实所有权与路径以
+`config/system/source-registry.yaml` 为准；运行契约以当前任务 Schema、主管派发和运行执行器为准。
 通用论据可按需读 [实战手册](skill-writing-handbook.md)，不要把其中的建议升级成本仓库硬门。
 
 ## 0. 先判执行形态
 
 | 形态 | 常见位置与调用 | 优先检查 |
 |---|---|---|
-| 编排型 Agent | `agents/decouple-*/`，由 Engine 显式派发 | typed input、runtime/capsule 路由、输出 Schema、失败语义、有效产出 |
+| 主管与员工 | `agents/supervisor/`、`agents/workers/`，由宿主执行具体委派 | 输入引用、任务范围、结果契约、独立上下文、失败语义 |
 | 自动触发 Skill | `.agents/skills/`、`skills/` 等，由描述或显式调用选中 | description 边界、用户任务、适用与排除场景、上下文成本 |
 | 函数型桥接 | `kb-bridge` 等由脚本或 Agent 程序化调用 | 参数/返回契约、探活、权限、路径与失败状态 |
 
-不要把三种形态套进同一个章节模板。编排型 Agent 的 description 主要帮助识别职责，
+不要把三种形态套进同一个章节模板。主管与员工的 description 主要帮助识别职责，
 触发评估不是其首要评估；函数型桥接首先需要可执行的输入输出契约。
 
 ## 1. SKILL.md 保留执行所需的内容
@@ -22,23 +22,22 @@ YAML frontmatter 写 `name` 和能准确说明适用任务的 `description`。�
 选择条件、非显然约束、必要的路由与失败处理。标题和章节由任务决定；不要要求所有 Agent
 都有 `Guidelines`、`Execution Steps`、`Output Format` 或固定人格宣言。
 
-v4.2 编排型 Agent 应尊重 Engine 的 `dispatch_kind`、typed input、`load_policy`、
-`skill_capsule_refs`、staging 与 receipt。新运行使用当前 runtime；历史 runtime 仅供相应版本回放。
-缺版本、缺必需输入或未知 phase 时显式失败，不能靠 SKILL.md 猜测补齐（C1/C3/C16）。
+主管与员工使用当前任务的输入引用、mode、读写范围、版本、acceptance criteria、staging 和结果提交。上下文由当前能力登记按需装配，宿主必须真实执行委派与独立审阅。
+缺版本、缺必需输入或未知方法时显式失败，不能靠 SKILL.md 猜测补齐（C1/C3/C16）。
 
 ## 2. 上下文与长度预算
 
-只保留每次调用都影响决策的内容。特定 mode、account 或历史版本的细节按条件加载，
-原始材料与大 artifact 用引用传递。预算以 `workflows/governance/complexity-budget.yaml`
+只保留每次调用都影响决策的内容。特定 mode 与 account 的细节按条件加载，
+原始材料与大 artifact 用引用传递。预算以 `config/system/complexity-budget.yaml`
 为准；`scripts/audit.sh` 和本 Skill 的 `scripts/audit_skill.py` 执行相应机械检查。
 达到警戒值先查重复、死规则与无消费者内容，再考虑拆 reference（C7/C10/C11）。
 
-## 3. Reference、Runtime 与 Capsule
+## 3. 岗位、方法与按需参考
 
-- 主 SKILL.md 只保留选择条件和指针；按需内容放在同目录 reference/runtime/capsule。
-- Reference 文件写清适用条件和调用方，避免复制 Schema、政策、质量门与另一个 Agent 的规则。
-- Engine 给出 capsule 时按 `load_policy` 加载；仅在 `skill_capsule_refs` 为空、capsule 缺必需契约或 Schema 校验明确要求时加载完整 `skill_ref`，并在 receipt warnings 记录 `fallback_reason=...`。
-- 不把已迁出产品线的 mode 写进当前默认路径。历史兼容内容标明适用版本、消费者和退出条件（C16）。
+- 岗位描述职责与交接，方法描述如何工作；主 SKILL.md 只保留必要规则、选择条件和指针。
+- Reference 写清适用条件与调用方，避免复制 Schema、政策或另一方法的规则。
+- 按当前 `load_policy` 读取登记资源并去重；工具、模板和具体参考只在对应分支确需时加载。缺必需方法就报告阻塞，不自动加载历史材料。
+- 退休资料保留在 `resources/history/` 供明确历史研究使用，不登记为生产方法或宿主可执行入口。
 
 ## 4. 宪法在撰写层的落点
 
@@ -50,22 +49,22 @@ v4.2 编排型 Agent 应尊重 Engine 的 `dispatch_kind`、typed input、`load_
 | C5/C6/C15 | 为现有 mode 能承载的事新建 Agent、Gate 或常驻步骤 | 举证独立失败语义和边际贡献，优先复用现有单元 |
 | C8 | LLM 输出加权小数总分、人味分或假精确概率 | 使用定位 finding、排序、理由和硬 KO |
 | C9 | 只改 Prompt，缺少真实回归或腐烂检测 | 选与失败类相符的评估和机制检查 |
-| C11/C13 | 所有任务加载全量背景或跑同等强度链路 | 按 phase、风险和价值控制上下文与流程 |
-| C12/C16 | 为旧组织形态不断打补丁或让 legacy 进入新默认路径 | 从目标能力和数据流设计；隔离兼容并定义退出条件 |
+| C11/C13 | 所有任务加载全量背景或跑同等强度链路 | 按任务范围、风险和价值控制上下文与流程 |
+| C12/C16 | 为旧组织形态保留并行调用链或隐式回退 | 从目标能力和数据流设计；当前生产只使用登记的主管架构 |
 
 这张表是问题识别索引，原则定义和准入条件仍由宪法管理。
 
 ## 5. 多账号行为
 
-只有行为确实因 `account_id` 分叉时才给主文件加速查或路由。账号声音、质量覆盖及
-专用 capsule 分别读取当前登记的真相源；不要在每个 Agent 复制三份账号规则。
+只有行为确实因 `account_id` 分叉时才给主文件加速查或路由。账号声音与受众读取
+`config/accounts/` 的当前登记文件，方法读取各自事实源；不要在每个岗位复制账号规则。
 `account_id` 与版本由上游契约提供，缺失时按契约失败，不能静默落到默认账号。
 
 ## 6. 输出契约
 
-输出字段、必填性和校验由当前 phase 的 Schema 定义。SKILL.md 可以给一个最小且
+输出字段、必填性和校验由当前任务与结果契约定义。SKILL.md 可以给一个最小且
 Schema 有效的示例帮助稳定产出，但不必复制完整 Schema；Markdown 模板不能成为第二套契约。
-先核对已知下游、外部调用与历史回放消费者。删除看似无人使用的字段前，做删除反事实验证并准备回退；结构改动同时更新消费者和相关用例（C5/C16）。
+先核对实际下游与外部调用。删除看似无人使用的字段前，验证消费方与数据保留范围；结构改动同时更新消费者和相关用例（C5/C16），不为旧执行链添加兼容分支。
 
 ## 7. 外置资料
 
@@ -83,20 +82,20 @@ Reference 用语义清楚的名称、相对链接和明确加载条件。脚本�
 ## 9. 能力评估
 
 先写出希望防止的真实失败，再选择评估方式。自动触发 Skill 可用正例、反例和边界任务
-检查触发；编排型 Agent 评估具体输出或决策；函数型桥接验证契约和错误状态。
+检查触发；员工评估具体输出或决策；函数型桥接验证契约和错误状态。
 示例数量按风险与行为分支决定，不设通用配额。
 
 判断型 Agent 的 `evaluation/quality-cases.json` 可用
-`python3 scripts/eval_skill.py agents/{name} --validate-only` 检查结构，普通调用只生成
+`PYTHONPATH=src python -m textpicos.maintenance.eval_skill agents/workers/<role> --validate-only` 检查结构，普通调用只生成
 供实际评估的工单。脚本通过不代表模型行为通过；行为回归需记录用例、输出与判定证据。
-结构审计见 `scripts/audit.sh` §L，语义结论不能伪装为确定性分数（C8/C9）。
+当前系统审计使用 `bash scripts/audit.sh --scope system`，语义结论不能伪装为确定性分数（C8/C9）。
 
 ## 10. 新增、修改与晋级
 
 - 新能力按宪法 §5 准入；默认路径上的存量单元重构时按 C6/C15 复审。先列调用方、消费者、替代方案、成本、失败语义和回退方式。
 - 修改既有能力时只修当前目标所需的契约与实现；多文件改动不自动要求停在计划阶段。
 - 孵化转生产前检查现行预算、Schema、消费者、评估和腐烂检测；历史例外不自动延续。
-- 结构变更用 `.agents/skills/doc-sync/` 检查同步义务，运行相关测试和 `bash scripts/audit.sh`。既有 FAIL 与本次回归分开报告。
+- 结构变更用 `.agents/skills/doc-sync/` 检查同步义务，运行相关测试和 `bash scripts/audit.sh --scope system`。既有 FAIL 与本次回归分开报告。
 
 ## 11. 常见反模式
 

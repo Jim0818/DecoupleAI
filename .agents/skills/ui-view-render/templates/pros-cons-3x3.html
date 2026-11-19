@@ -1,0 +1,156 @@
+<!--
+  ui-view-render :: Pros / Cons 3×3 (reference template)
+  Pattern: bilateral list contrast — 3 strengths vs 3 weaknesses for Skill-evaluation articles
+  Mode: bright + green/red color coding
+  Use class prefix: uvr-skproscons-
+-->
+<section class="uvr-skproscons-wrap">
+  <style>
+    .uvr-skproscons-wrap {
+      max-width: 800px;
+      margin: 24px auto;
+      font-family: 'PingFang SC', system-ui, -apple-system, sans-serif;
+    }
+    .uvr-skproscons-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .uvr-skproscons-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .uvr-skproscons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 600px) {
+      .uvr-skproscons-grid { grid-template-columns: 1fr; }
+    }
+    .uvr-skproscons-col {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      border-top: 4px solid;
+    }
+    .uvr-skproscons-col--pros { border-top-color: #16a34a; }
+    .uvr-skproscons-col--cons { border-top-color: #dc2626; }
+    .uvr-skproscons-col-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .uvr-skproscons-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .uvr-skproscons-col--pros .uvr-skproscons-badge { background: #16a34a; }
+    .uvr-skproscons-col--cons .uvr-skproscons-badge { background: #dc2626; }
+    .uvr-skproscons-col h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+    .uvr-skproscons-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .uvr-skproscons-item {
+      padding-left: 20px;
+      position: relative;
+    }
+    .uvr-skproscons-item::before {
+      position: absolute;
+      left: 0;
+      top: 1px;
+      font-weight: 800;
+    }
+    .uvr-skproscons-col--pros .uvr-skproscons-item::before {
+      content: '✓';
+      color: #16a34a;
+    }
+    .uvr-skproscons-col--cons .uvr-skproscons-item::before {
+      content: '✗';
+      color: #dc2626;
+    }
+    .uvr-skproscons-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 3px;
+      line-height: 1.4;
+    }
+    .uvr-skproscons-item-evidence {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.55;
+      margin: 0;
+    }
+  </style>
+  <div class="uvr-skproscons-eyebrow">优缺点 · 3 vs 3 实测对比</div>
+  <div class="uvr-skproscons-title">Superpowers · 真实使用画像</div>
+  <div class="uvr-skproscons-grid">
+    <article class="uvr-skproscons-col uvr-skproscons-col--pros">
+      <div class="uvr-skproscons-col-head">
+        <div class="uvr-skproscons-badge">+</div>
+        <h3>优点</h3>
+      </div>
+      <ul class="uvr-skproscons-list">
+        <li class="uvr-skproscons-item">
+          <div class="uvr-skproscons-item-title">质量门控完整度业界第一</div>
+          <p class="uvr-skproscons-item-evidence">5 阶段硬门 + TDD 铁律，13 个 Red Flag 全覆盖。</p>
+        </li>
+        <li class="uvr-skproscons-item">
+          <div class="uvr-skproscons-item-title">SDD 子代理驱动消除上下文污染</div>
+          <p class="uvr-skproscons-item-evidence">v6.0 单 reviewer 双裁决，token 砍半。</p>
+        </li>
+        <li class="uvr-skproscons-item">
+          <div class="uvr-skproscons-item-title">obra 持续迭代</div>
+          <p class="uvr-skproscons-item-evidence">公开拒绝率 94%，文档诚实，问题修复速度 &lt; 1 周。</p>
+        </li>
+      </ul>
+    </article>
+    <article class="uvr-skproscons-col uvr-skproscons-col--cons">
+      <div class="uvr-skproscons-col-head">
+        <div class="uvr-skproscons-badge">−</div>
+        <h3>缺点</h3>
+      </div>
+      <ul class="uvr-skproscons-list">
+        <li class="uvr-skproscons-item">
+          <div class="uvr-skproscons-item-title">300K token 起步成本极高</div>
+          <p class="uvr-skproscons-item-evidence">未对话已吃掉 1/3 上下文。</p>
+        </li>
+        <li class="uvr-skproscons-item">
+          <div class="uvr-skproscons-item-title">非 TDD 工作者无法上手</div>
+          <p class="uvr-skproscons-item-evidence">没有先写失败测试就强制删除代码重来。</p>
+        </li>
+        <li class="uvr-skproscons-item">
+          <div class="uvr-skproscons-item-title">仅适用代码项目</div>
+          <p class="uvr-skproscons-item-evidence">写作 / PPT / 调研类任务完全不适用。</p>
+        </li>
+      </ul>
+    </article>
+  </div>
+</section>

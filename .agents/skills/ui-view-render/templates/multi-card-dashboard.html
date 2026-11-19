@@ -1,0 +1,130 @@
+<!--
+  ui-view-render :: Multi-Card Dashboard (reference template)
+  Pattern: parallel categories / 3-column phase overview
+  Mode: bright + outlined numeric anchors
+  Use class prefix: uvr-dashboard-
+-->
+<section class="uvr-dashboard-wrap">
+  <style>
+    .uvr-dashboard-wrap {
+      max-width: 880px;
+      margin: 24px auto;
+      font-family: 'PingFang SC', system-ui, -apple-system, sans-serif;
+    }
+    .uvr-dashboard-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .uvr-dashboard-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .uvr-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    @media (max-width: 720px) {
+      .uvr-dashboard-grid { grid-template-columns: 1fr; }
+    }
+    .uvr-dashboard-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 28px 24px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+      position: relative;
+    }
+    .uvr-dashboard-anchor {
+      font-family: 'SF Pro Display', system-ui, sans-serif;
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1;
+      -webkit-text-stroke: 1.5px currentColor;
+      color: transparent;
+      margin-bottom: 14px;
+      letter-spacing: -2px;
+    }
+    .uvr-dashboard-card--ingest .uvr-dashboard-anchor { color: #2563eb; }
+    .uvr-dashboard-card--score  .uvr-dashboard-anchor { color: #9333ea; }
+    .uvr-dashboard-card--handoff .uvr-dashboard-anchor { color: #16a34a; }
+    .uvr-dashboard-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .uvr-dashboard-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 4px 0 10px;
+    }
+    .uvr-dashboard-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #475569;
+      margin: 0 0 10px;
+    }
+    .uvr-dashboard-meta {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 10px;
+      margin-top: 12px;
+    }
+    .uvr-dashboard-meta span strong {
+      display: block;
+      font-size: 13px;
+      color: #0f172a;
+      font-weight: 700;
+    }
+  </style>
+  <div class="uvr-dashboard-eyebrow">aihot-researcher · 5-stage pipeline (excerpt)</div>
+  <div class="uvr-dashboard-title">情报检索增强：从原始信号到候选简报</div>
+  <div class="uvr-dashboard-grid">
+    <article class="uvr-dashboard-card uvr-dashboard-card--ingest">
+      <div class="uvr-dashboard-anchor">01</div>
+      <span class="uvr-dashboard-pill">Ingest</span>
+      <h3>Fetch &amp; Classify</h3>
+      <p>aihot.virxact.com API 拉取 48h 窗口；6-类分类 + AI 相关性二分门；relevance_confidence &lt; 0.65 直接淘汰。</p>
+      <div class="uvr-dashboard-meta">
+        <span><strong>50</strong>raw items</span>
+        <span><strong>~32</strong>survivors</span>
+      </div>
+    </article>
+    <article class="uvr-dashboard-card uvr-dashboard-card--score">
+      <div class="uvr-dashboard-anchor">02</div>
+      <span class="uvr-dashboard-pill">Score</span>
+      <h3>7-Dim + Weighted Aggregation</h3>
+      <p>signal_strength / factuality / novelty / technical_depth / actionability / impact_scope / longevity，类别加权得 base_quality_score。</p>
+      <div class="uvr-dashboard-meta">
+        <span><strong>1/3/5/7/9</strong>anchor scale</span>
+        <span><strong>6</strong>weight tables</span>
+      </div>
+    </article>
+    <article class="uvr-dashboard-card uvr-dashboard-card--handoff">
+      <div class="uvr-dashboard-anchor">03</div>
+      <span class="uvr-dashboard-pill">Handoff</span>
+      <h3>Top-20 → Researcher</h3>
+      <p>规则引擎 PROMOTE/DEMOTE/FILTER + 时间衰减；交付 Three-Question Filter，剩余 3-5 候选含 final_score。</p>
+      <div class="uvr-dashboard-meta">
+        <span><strong>≥ 0.65</strong>confidence floor</span>
+        <span><strong>Top 20</strong>delivered</span>
+      </div>
+    </article>
+  </div>
+</section>

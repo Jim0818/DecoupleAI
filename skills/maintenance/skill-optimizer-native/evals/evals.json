@@ -4,8 +4,8 @@
   "cases": [
     {
       "name": "update-existing-skill",
-      "request": "更新一个现有 Agent SKILL.md，修复与当前 v4.2 Schema 不一致的输出说明。",
-      "expected_behavior": "检查当前 phase Schema、Engine 派发、消费者和旧版回放边界；直接实施授权的修复，验证相关用例和审计，不强制先停在计划。"
+      "request": "更新一个现有员工 SKILL.md，修复与当前任务结果契约不一致的输出说明。",
+      "expected_behavior": "检查当前任务契约、宿主委派、实际消费者和成果版本；直接实施授权修复，验证相关用例与审计，不恢复退役调用链，也不强制先停在计划。"
     },
     {
       "name": "new-agent-admission",

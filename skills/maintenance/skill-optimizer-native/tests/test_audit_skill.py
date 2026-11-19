@@ -35,7 +35,7 @@ class AuditSkillTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             for relative, count, expected_limit in (
-                ("agents/decouple-example", 351, 350),
+                ("agents/workers/example", 351, 350),
                 ("skills/example", 301, 300),
             ):
                 directory = root / relative

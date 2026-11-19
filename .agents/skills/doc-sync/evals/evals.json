@@ -1,0 +1,11 @@
+{
+  "skill_name": "doc-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "AGENTS.md says 18 agents and an old workflow document says 13. Sync the docs.",
+      "expected_output": "Runs deterministic audit and identifies the canonical registry instead of guessing.",
+      "assertions": ["does not manually choose a count", "runs or cites doc_sync_audit.py", "reports the semantic conflict"]
+    }
+  ]
+}

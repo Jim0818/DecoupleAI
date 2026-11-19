@@ -1,0 +1,11 @@
+{
+  "skill_name": "retro-optimizer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "复盘刚完成的视频流水线，发现一个问题与 TODO #58 同根。",
+      "expected_output": "Loads video-specific references and merges evidence into the existing root issue.",
+      "assertions": ["selects workflow-5-video scope", "does not apply image-only checks", "uses TODO similarity check", "does not create a duplicate issue"]
+    }
+  ]
+}

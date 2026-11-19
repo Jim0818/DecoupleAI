@@ -1,0 +1,111 @@
+<!--
+  ui-view-render :: Dual-Column Compare (reference template)
+  Pattern: opposition / before-after / approach-A-vs-approach-B
+  Mode: bright
+  Use class prefix: uvr-compare-
+-->
+<section class="uvr-compare-wrap">
+  <style>
+    .uvr-compare-wrap {
+      max-width: 760px;
+      margin: 24px auto;
+      font-family: 'PingFang SC', system-ui, -apple-system, sans-serif;
+    }
+    .uvr-compare-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .uvr-compare-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .uvr-compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 560px) {
+      .uvr-compare-grid { grid-template-columns: 1fr; }
+    }
+    .uvr-compare-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+    .uvr-compare-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .uvr-compare-card--legacy::before { background: #64748b; }
+    .uvr-compare-card--proposed::before { background: #2563eb; }
+    .uvr-compare-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .uvr-compare-pill--legacy { background: #f1f5f9; color: #64748b; }
+    .uvr-compare-pill--proposed { background: #dbeafe; color: #2563eb; }
+    .uvr-compare-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 12px;
+    }
+    .uvr-compare-card ul { list-style: none; padding: 0; margin: 0; }
+    .uvr-compare-card li {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #334155;
+      padding: 6px 0 6px 18px;
+      position: relative;
+    }
+    .uvr-compare-card li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+    .uvr-compare-card--proposed li::before { color: #2563eb; }
+  </style>
+  <div class="uvr-compare-eyebrow">Refiner Mode Comparison</div>
+  <div class="uvr-compare-title">Subtractive vs. Length-Aware Additive</div>
+  <div class="uvr-compare-grid">
+    <article class="uvr-compare-card uvr-compare-card--legacy">
+      <span class="uvr-compare-pill uvr-compare-pill--legacy">Legacy (v2.6-)</span>
+      <h3>纯减法优化</h3>
+      <ul>
+        <li>默认认为初稿过长，必须裁剪</li>
+        <li>对偏短初稿继续做减法 → 成稿更短</li>
+        <li>没有 length budget 概念</li>
+        <li>偏短问题无法在流水线内修复</li>
+      </ul>
+    </article>
+    <article class="uvr-compare-card uvr-compare-card--proposed">
+      <span class="uvr-compare-pill uvr-compare-pill--proposed">B1 New</span>
+      <h3>length-gate 自适应</h3>
+      <ul>
+        <li>读 total_target_word_count 计算 ratio</li>
+        <li>≥ 90% 减法；&lt; 90% 加法；混合可叠加</li>
+        <li>加法只引用 Decoupler §1-4 / h_v_sketch</li>
+        <li>mode_used 写入 output schema 可审计</li>
+      </ul>
+    </article>
+  </div>
+</section>

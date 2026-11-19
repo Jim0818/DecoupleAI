@@ -1,7 +1,7 @@
 ---
 name: natural-prose
 description: >
-  TextPicOS 中文非虚构自然正文方法。用于写作员工的新稿、原稿编辑和局部修复，以及独立审阅的表达检查；处理材料取舍、段落推进、有据判断、技术细节保护与自然停止。新运行普通稿连续展开，复杂技术稿按需分节，历史运行服从原契约。事实核验、选题、标题生成、资料检索、视觉设计或契约校验不用本技能；不以标点、句式或第一人称数量评价自然度。
+  TextPicOS 中文非虚构自然正文方法。用于写作员工的新稿、原稿编辑和局部修复，以及独立审阅的表达检查；处理材料取舍、段落推进、有据判断、技术细节保护与自然停止。当前普通稿连续展开，复杂技术稿按需分节。事实核验、选题、标题生成、资料检索、视觉设计或契约校验不用本技能；不以标点、句式或第一人称数量评价自然度。
 metadata:
   version: "1.2.0"
   role: shared natural-prose capability for compose/review/refine
@@ -20,9 +20,9 @@ metadata:
 |---|---|---|
 | `compose` | 写作员工 compose / edit | 新稿按材料组织；原稿编辑保留有效表达与任务范围 |
 | `review` | 独立审阅员工 | 检查理解、可信度、阅读任务及用户明确的表达要求 |
-| `refine` | 写作员工 repair；legacy Refiner | 只修允许的问题及必要上下文 |
+| `refine` | 写作员工 repair | 只修允许的问题及必要上下文 |
 
-使用任务提供的范围、材料权限和有效结构政策。新主管上下文提供当前 `prose_policy_revision`；历史运行读取其已记录契约。本 Skill 不另造输出格式或固定流程。
+使用任务提供的范围、材料权限和有效结构政策。主管上下文提供当前 `prose_policy_revision=2`。显式请求退役政策时报告不支持，不自动升级或改写历史稿件。本 Skill 不另造输出格式或固定流程。
 
 ## 2. 五条总原则
 
@@ -62,7 +62,7 @@ metadata:
 
 ### 4.1 `continuous_editorial`
 
-Revision 2 的普通文章、情报、产品更新、工具介绍、行业观察、普通分析、复盘和一般教程均采用这一类。历史 revision 1 仍按已锁定契约读取。
+Revision 2 的普通文章、情报、产品更新、工具介绍、行业观察、普通分析、复盘和一般教程均采用这一类。
 
 默认要求：
 
@@ -74,11 +74,7 @@ Revision 2 的普通文章、情报、产品更新、工具介绍、行业观察
 
 情报类具体写法见 `references/intelligence-writing.md`。
 
-### 4.2 `sectioned_editorial`（仅 revision 1 回放）
-
-普通文章、叙事、复盘、分析、教程或工具稿确有导航价值时允许 H2，也可以不用。分节依据是读者需要定位不同任务、阶段或问题，不是题材、字数和固定数量。小标题优先说明对象、动作、变化或本节职责，不强制写成金句或态度。
-
-### 4.3 `hard_technical`
+### 4.2 `hard_technical`
 
 硬核技术文 **H2 allowed, not required**。出现代码或安装命令本身不构成硬技术分节理由；用了 H2 时服从正文结构政策的末节规则。
 
@@ -120,7 +116,7 @@ Revision 2 可依真实事实补少量非关键情境细节，但不得改变事
 ## 7. `compose` 模式
 
 1. 读取读者任务、材料与边界；编辑原稿时先辨认需保留的有效内容。关键机制或过程不能仅凭摘要还原时，按需回读原始片段、代码或记录；缺材料就缩小范围或报告缺口。
-2. 服从调用者给出的结构类与 `prose_policy_revision`；缺少 revision 按历史 revision 1 解释。
+2. 使用当前 `prose_policy_revision=2` 与有效结构类；缺省普通稿 continuous_editorial，需要技术分节时由写作员工按稿件性质选择 hard_technical。显式退役政策或未知结构类应报错。
 3. 按 §6 进入具体问题，再按 §2—3 安排详略和顺序；不为节奏制造短句、转折或平均篇幅。
 4. 需要判断时靠近其证据，说明条件；来源、作者表达及情境细节服从 §5。
 5. 保留有作用的例子、真实反应与停顿；技术任务保护代码、参数、条件链、实验口径和必要长段。
@@ -172,7 +168,7 @@ Revision 2 可依真实事实补少量非关键情境细节，但不得改变事
 
 具体修复动作见 `references/revision-actions.md`。
 
-Refiner 不做全篇“人味美容”，也不把技术内容缩短成移动端短句。
+局部修订不做全篇“人味美容”，也不把技术内容缩短成移动端短句。
 
 ## 10. 不采用的伪规则
 
@@ -197,4 +193,4 @@ Refiner 不做全篇“人味美容”，也不把技术内容缩短成移动端
 | `references/epistemic-texture.md` | 来源核对、真实自我修正、未知项、细节真假与“我怎么知道”需要处理 |
 | `references/intelligence-writing.md` | 情报、新闻、产品更新、单事件动态 |
 | `references/hard-tech-writing.md` | 机制、源码、论文、教程、实验、工程排障 |
-| `references/revision-actions.md` | Reviewer/Refiner 处理局部表达 finding |
+| `references/revision-actions.md` | 审阅与修订员工处理局部表达 finding |

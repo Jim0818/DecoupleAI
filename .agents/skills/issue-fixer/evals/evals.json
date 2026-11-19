@@ -1,0 +1,17 @@
+{
+  "skill_name": "issue-fixer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Fix a TODO claiming a missing schema, but the schema now exists.",
+      "expected_output": "Verifies current facts and corrects the issue premise before implementation.",
+      "assertions": ["checks the referenced schema", "does not implement the stale claim literally", "records the corrected root cause"]
+    },
+    {
+      "id": 2,
+      "prompt": "Execute this approved plan in a host without TaskCreate or ExitPlanMode.",
+      "expected_output": "Uses available planning/tracking capabilities and continues execution.",
+      "assertions": ["does not require a named host tool", "tracks dependency order", "runs verification"]
+    }
+  ]
+}
