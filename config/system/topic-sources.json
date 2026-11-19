@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "opencode-releases",
+      "kind": "github_releases",
+      "repo": "anomalyco/opencode",
+      "signal": "official_update",
+      "enabled": true,
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000,
+      "api_version": "2026-03-10"
+    },
+    {
+      "id": "opencode-issues",
+      "kind": "github_issues",
+      "repo": "anomalyco/opencode",
+      "state": "open",
+      "signal": "community_question",
+      "enabled": true,
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000,
+      "api_version": "2026-03-10"
+    },
+    {
+      "id": "codex-releases",
+      "kind": "github_releases",
+      "repo": "openai/codex",
+      "signal": "official_update",
+      "enabled": true,
+      "take": 3,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000,
+      "api_version": "2026-03-10",
+      "note": "Release asset metadata exceeded the 2 MB budget at 12 items in the 2026-11-19 live probe; fetch three per page and continue explicitly when needed."
+    },
+    {
+      "id": "claude-code-releases",
+      "kind": "github_releases",
+      "repo": "anthropics/claude-code",
+      "signal": "official_update",
+      "enabled": true,
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000,
+      "api_version": "2026-03-10"
+    },
+    {
+      "id": "python-blog",
+      "kind": "feed",
+      "url": "https://blog.python.org/feeds/posts/default?alt=rss",
+      "signal": "official_update",
+      "enabled": true,
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000
+    },
+    {
+      "id": "v2ex-programmer",
+      "kind": "feed",
+      "url": "https://www.v2ex.com/feed/programmer.json",
+      "signal": "community_question",
+      "enabled": true,
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000
+    },
+    {
+      "id": "opencode-discussions",
+      "kind": "github_discussions",
+      "repo": "anomalyco/opencode",
+      "token_env": "TEXTPICOS_GITHUB_TOKEN",
+      "signal": "community_question",
+      "enabled": false,
+      "note": "Explicit token required; enable after verifying repository Discussions availability.",
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000,
+      "api_version": "2026-03-10"
+    },
+    {
+      "id": "rsshub-github-trending",
+      "kind": "feed",
+      "url": "https://rsshub.app/github/trending/daily/any",
+      "signal": "discovery_trend",
+      "enabled": false,
+      "note": "Optional unknown-repository discovery pilot; the public route returned HTTP 403 on 2026-11-19. Keep disabled; use an explicitly authorized working instance only when this gap matters.",
+      "take": 12,
+      "max_pages": 1,
+      "timeout_seconds": 12,
+      "max_response_bytes": 2000000
+    }
+  ]
+}

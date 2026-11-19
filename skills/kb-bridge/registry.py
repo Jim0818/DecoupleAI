@@ -21,6 +21,14 @@ OPS = {
     "write-topic-qual": "handlers.write_topic_qual",
 }
 
-# These operations describe local configuration only; they do not open a vault
-# or create receipts. Keep their standalone, standard-library execution path.
+# Planning operations are local unless a request explicitly selects vault files.
+# Their handlers also enforce the boundary, including when called directly.
 LOCAL_OPS = frozenset({"read-topic-strategy"})
+PLANNING_OPS = frozenset({"read-topic-strategy", "list-topics"})
+
+
+def requires_vault(op, request):
+    if op in PLANNING_OPS:
+        sources = request.get("sources", [])
+        return isinstance(sources, list) and any(isinstance(s, dict) and s.get("scope") == "vault" for s in sources)
+    return op not in LOCAL_OPS

@@ -22,13 +22,23 @@ description: |
 外部宿主必须设置 `TEXTPICOS_ROOT`，指向包含 `config/system/paths.json` 的当前项目。
 项目内的源 bundle 可定位自身项目。访问知识库前，显式设置 `AI_WIKI_ROOT`
 或 `TEXTPICOS_AI_WIKI_ROOT`；后者优先。系统维护模式不访问外部知识库。
-本地 `read-topic-strategy` 无需配置知识库。
+仅选项目内资料或没有选来源的规划操作无需配置知识库。`list-topics` 与
+`read-topic-strategy` 按 `sources[].scope` 区分项目资料和外部资料；任何 vault 来源
+仍需明确根目录，并遵守维护范围及原生 run 身份检查。
 
 ## 读取选题策略
 
-使用 `read-topic-strategy` 的 `current` 模式。它只返回需由调用方实际读取的
-账号 L1/L2 指针，不读取外部手册。策略不可用时返回 `not_available / not_read`；
-必需调用非零退出，可选调用须显式传 `optional: true`。
+使用 `read-topic-strategy` 的 `current` 模式，显式给出 `sources`：每项包含
+`scope: project|vault` 和相对文件 `path`。返回实际读取片段、SHA-256、读取时间与
+截断状态；可用 `expected_sha256` 检查选定版本。未选来源时仍为
+`not_available / not_read`，L1/L2 指针不冒充已读取的外部策略。
+
+`list-topics` 使用相同来源列表，按明确题号的 Markdown 表格/标题或 JSON topics
+返回单题及原始位置；无题号时只按显式选定的标题层级解析。不再递归扫库或隐式
+读取参考索引。规划状态保持原值，不等同于发布状态。无法解析、来源缺失和版本
+不符明确返回；部分来源失败保留成功结果，必需调用仍非零，可选调用显式使用
+`optional: true`。完整调用与候选消费者见
+[选题工具](../research/references/topic-tools.md)。
 
 ## 发布单篇文章
 

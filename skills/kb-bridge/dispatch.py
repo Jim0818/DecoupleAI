@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from registry import LOCAL_OPS, OPS  # noqa: E402
+from registry import OPS, requires_vault  # noqa: E402
 
 
 def fail(message: str, code: str = "BAD_INPUT") -> int:
@@ -39,7 +39,7 @@ def main() -> int:
 
     os.environ["KB_BRIDGE_OP"] = str(op)
     os.environ["KB_BRIDGE_NAME"] = "kb-bridge"
-    if op not in LOCAL_OPS:
+    if requires_vault(op, request):
         if os.environ.get("TEXTPICOS_MAINTENANCE_SCOPE") == "system":
             return fail("External vault operations are outside system maintenance scope", code="OUT_OF_SCOPE")
         if not (os.environ.get("AI_WIKI_ROOT") or os.environ.get("TEXTPICOS_AI_WIKI_ROOT")):
