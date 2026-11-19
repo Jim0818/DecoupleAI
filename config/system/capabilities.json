@@ -9,9 +9,15 @@
       "entrypoint": "agents/supervisor/SKILL.md",
       "default_mode": "coordinate",
       "modes": {
-        "coordinate": {}
+        "coordinate": {
+          "skill_modes": {
+            "visual": "assess"
+          }
+        }
       },
-      "required_skills": [],
+      "required_skills": [
+        "visual"
+      ],
       "default_skills": [],
       "account_files": [
         "L1_identity.md",
@@ -22,7 +28,11 @@
       "entrypoint": "agents/workers/research/SKILL.md",
       "default_mode": "research",
       "modes": {
-        "discover": {},
+        "discover": {
+          "account_files": [
+            "L2_values.md"
+          ]
+        },
         "research": {},
         "verify": {}
       },
@@ -43,7 +53,8 @@
       "modes": {
         "compose": {
           "skill_modes": {
-            "natural-prose": "compose"
+            "natural-prose": "compose",
+            "visual": "integrate"
           },
           "policy_refs": [
             "config/policies/writing/claim-evidence-policy.md"
@@ -51,33 +62,38 @@
         },
         "edit": {
           "skill_modes": {
-            "natural-prose": "compose"
+            "natural-prose": "compose",
+            "visual": "integrate"
           },
           "policy_refs": []
         },
         "repair": {
           "skill_modes": {
-            "natural-prose": "refine"
+            "natural-prose": "refine",
+            "visual": "integrate"
           },
           "policy_refs": []
         },
         "title": {
           "skill_modes": {
-            "natural-prose": "compose"
+            "natural-prose": "compose",
+            "visual": "preserve"
           },
           "policy_refs": [],
           "default_skills": []
         },
         "summary": {
           "skill_modes": {
-            "natural-prose": "compose"
+            "natural-prose": "compose",
+            "visual": "preserve"
           },
           "policy_refs": [],
           "default_skills": []
         }
       },
       "required_skills": [
-        "writing"
+        "writing",
+        "visual"
       ],
       "default_skills": [
         "natural-prose"
@@ -94,23 +110,27 @@
       "modes": {
         "review": {
           "skill_modes": {
-            "natural-prose": "review"
+            "natural-prose": "review",
+            "visual": "review"
           }
         },
         "review-changes": {
           "skill_modes": {
-            "natural-prose": "review"
+            "natural-prose": "review",
+            "visual": "review"
           }
         },
         "title": {
           "skill_modes": {
-            "natural-prose": "review"
+            "natural-prose": "review",
+            "visual": "preserve"
           },
           "default_skills": []
         }
       },
       "required_skills": [
-        "review"
+        "review",
+        "visual"
       ],
       "default_skills": [
         "natural-prose"

@@ -98,6 +98,23 @@ def list_capabilities(paths: Any) -> dict[str, Any]:
     }
 
 
+def account_file_names(definition: Mapping[str, Any], location: str) -> list[str]:
+    """Validate account-relative resource names without probing the filesystem."""
+    filenames = definition.get("account_files", [])
+    if not isinstance(filenames, list):
+        raise ContextError(f"{location}.account_files must be a list of relative file paths")
+    for filename in filenames:
+        if (not isinstance(filename, str) or not filename.strip()
+                or "://" in filename
+                or any(ord(char) < 32 or ord(char) == 127 for char in filename)
+                or Path(filename).is_absolute() or ".." in Path(filename).parts
+                or not Path(filename).parts):
+            raise ContextError(
+                f"{location}.account_files must contain nonempty relative file paths without '..'"
+            )
+    return list(dict.fromkeys(filenames))
+
+
 def assemble_context(
     paths: Any,
     task: Mapping[str, Any],
@@ -134,10 +151,17 @@ def assemble_context(
     if role not in registry["roles"]:
         raise ContextError(f"Unknown role: {role!r}")
     role_def = registry["roles"][role]
-    mode = mode or task.get("mode") or role_def["default_mode"]
-    if mode not in role_def["modes"]:
+    if not isinstance(role_def, Mapping):
+        raise ContextError(f"Role definition must be a mapping: {role!r}")
+    modes = role_def.get("modes")
+    if not isinstance(modes, Mapping):
+        raise ContextError(f"Role modes must be a mapping: {role!r}")
+    mode = mode or task.get("mode") or role_def.get("default_mode")
+    if mode not in modes:
         raise ContextError(f"Unknown mode {mode!r} for role {role!r}")
-    mode_def = role_def["modes"][mode]
+    mode_def = modes[mode]
+    if not isinstance(mode_def, Mapping):
+        raise ContextError(f"Mode definition must be a mapping: {role!r}.{mode!r}")
     account_id = account_id if account_id is not None else task.get("account_id")
     if account_id is not None and account_id not in registry["accounts"]:
         raise ContextError(f"Unknown account: {account_id!r}")
@@ -243,7 +267,13 @@ def assemble_context(
 
     if account_id is not None:
         account = registry["accounts"][account_id]
-        for filename in role_def.get("account_files", []):
+        # A mode adds task-specific resources; it never removes the role's
+        # identity inputs. Keep existing configurations and resource IDs stable.
+        filenames = [
+            *account_file_names(role_def, f"roles.{role}"),
+            *account_file_names(mode_def, f"roles.{role}.modes.{mode}"),
+        ]
+        for filename in dict.fromkeys(filenames):
             add_file(f"account:{account_id}:{filename}", Path(account["directory"]) / filename, "account")
 
     input_refs = task.get("input_refs", task.get("inputs", []))

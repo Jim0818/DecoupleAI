@@ -1,0 +1,135 @@
+{
+  "_comment": "fetch is the current optional source adapter; legacy_scoring is historical replay data only and is never consumed by discover.",
+  "fetch": {
+    "base_url": "https://aihot.virxact.com/api/public/items",
+    "default_mode": "selected",
+    "default_window_hours": 48,
+    "default_take": 50,
+    "timeout_seconds": 20,
+    "max_response_bytes": 2000000,
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+  },
+  "legacy_scoring": {
+    "classification": {
+      "category_map": {
+        "tip": "OPINION_ANALYSIS",
+        "paper": "RESEARCH_PAPER",
+        "ai-models": "MODEL_RELEASE",
+        "ai-products": "TOOL_FRAMEWORK",
+        "industry": "INDUSTRY_NEWS"
+      },
+      "fallback": "ENGINEERING_PRACTICE",
+      "relevance_confidence_min": 0.65
+    },
+    "dimensions": [
+      "signal_strength",
+      "factuality",
+      "novelty",
+      "technical_depth",
+      "actionability",
+      "impact_scope",
+      "longevity"
+    ],
+    "category_weights": {
+      "MODEL_RELEASE": {
+        "signal_strength": 0.2,
+        "factuality": 0.2,
+        "novelty": 0.15,
+        "technical_depth": 0.1,
+        "actionability": 0.05,
+        "impact_scope": 0.25,
+        "longevity": 0.05
+      },
+      "RESEARCH_PAPER": {
+        "signal_strength": 0.1,
+        "factuality": 0.2,
+        "novelty": 0.2,
+        "technical_depth": 0.25,
+        "actionability": 0.05,
+        "impact_scope": 0.1,
+        "longevity": 0.1
+      },
+      "ENGINEERING_PRACTICE": {
+        "signal_strength": 0.15,
+        "factuality": 0.1,
+        "novelty": 0.05,
+        "technical_depth": 0.15,
+        "actionability": 0.35,
+        "impact_scope": 0.05,
+        "longevity": 0.15
+      },
+      "TOOL_FRAMEWORK": {
+        "signal_strength": 0.15,
+        "factuality": 0.1,
+        "novelty": 0.15,
+        "technical_depth": 0.2,
+        "actionability": 0.3,
+        "impact_scope": 0.05,
+        "longevity": 0.05
+      },
+      "INDUSTRY_NEWS": {
+        "signal_strength": 0.25,
+        "factuality": 0.25,
+        "novelty": 0.1,
+        "technical_depth": 0.05,
+        "actionability": 0.05,
+        "impact_scope": 0.25,
+        "longevity": 0.05
+      },
+      "OPINION_ANALYSIS": {
+        "signal_strength": 0.3,
+        "factuality": 0.15,
+        "novelty": 0.15,
+        "technical_depth": 0.1,
+        "actionability": 0.05,
+        "impact_scope": 0.15,
+        "longevity": 0.1
+      }
+    },
+    "rules": [
+      {
+        "id": "filter_low_signal",
+        "action": "filter",
+        "note": "marketing noise"
+      },
+      {
+        "id": "filter_low_factuality",
+        "action": "filter",
+        "note": "unverifiable"
+      },
+      {
+        "id": "demote_unsupported_high_dim",
+        "action": "demote",
+        "delta": -10
+      },
+      {
+        "id": "promote_novel_deep",
+        "action": "promote",
+        "delta": 10
+      },
+      {
+        "id": "promote_broad_impact_factual",
+        "action": "promote",
+        "delta": 8
+      },
+      {
+        "id": "demote_score_collapse",
+        "action": "demote",
+        "delta": -15,
+        "note": "all dimensions identical — likely hallucinated"
+      }
+    ],
+    "time_decay": {
+      "INDUSTRY_NEWS": 0.12,
+      "MODEL_RELEASE": 0.08,
+      "OPINION_ANALYSIS": 0.06,
+      "TOOL_FRAMEWORK": 0.04,
+      "ENGINEERING_PRACTICE": 0.03,
+      "RESEARCH_PAPER": 0.02
+    },
+    "output": {
+      "top_n": 20,
+      "min_candidates_required": 10
+    }
+  }
+}
