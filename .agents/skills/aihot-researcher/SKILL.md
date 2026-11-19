@@ -40,10 +40,9 @@ python .agents/skills/aihot-researcher/fetch.py
 行业影响、源码深度、抽象程度或“亲测”作为所有教程的入选前提。主管只接收本次
 真正有用的线索、链接、日期和下一步证据缺口；不移交到旧阶段或旧三问硬筛。
 
-## 历史兼容
+## 退休入口
 
-`score.py`、`dim_scores.json` 与 `config.json` 的 `legacy_scoring` 只供明确的
-历史评分回放。直接调用 `score.py` 会标记 `legacy_replay`；其原有格式与算术保留
-给旧读取者及 `test_score.py`。当前 discover 不调用它、不消费分数，也不据此扩抓。
-这些兼容文件可在历史读取者不再依赖旧格式时一起退出；需要回退时使用原始保存
-输入回放，不把历史策略重新设为当前默认。故障核查见 [API验证手册.md](API验证手册.md)。
+旧评分与历史执行已移除。`score.py` 只返回明确的非零退休错误，不读取评分输入、
+不写排名文件，也不作为任何故障回退。保留的 `dim_scores.json` 仅是历史数据，
+不属于当前生产输入。当前 discover 只消费 `fetch.py` 的未核验线索，再按实际任务
+补证据和作编辑判断。故障核查见 [API验证手册.md](API验证手册.md)。

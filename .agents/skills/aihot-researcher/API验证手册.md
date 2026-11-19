@@ -33,3 +33,6 @@ python .agents/skills/aihot-researcher/fetch.py --window-hours 48 --take 10
 项目系统测试 `tests/test_topic_legacy_tools.py` 使用伪造响应验证：一条线索、空列表、
 失败、坏结构和预算上限，不访问线上 API。这类测试通过只能证明适配器行为；
 一次真实请求才可说明该时刻的连通性，仍不能证明原文内容的真实性。
+
+旧评分入口不参与来源接入。`python .agents/skills/aihot-researcher/test_score.py`
+只验证 `score.py` 非零拒绝调用，且不创建或覆盖排名文件；不再验证历史排名成功。
