@@ -194,17 +194,46 @@ def cached_sources(paths, request):
 
 
 def planning(paths, request, operation):
+    from textpicos.content.topic_planning import _validate as validate_planning_request
+
     configuration = _config(paths, PLANNING_CONFIG)
     account = request.get("account_id")
     accounts = configuration.get("accounts", {})
     if account not in accounts:
         raise ValueError("Select a configured account_id")
     key = "topic_sources" if operation == "planning" else "strategy_sources"
-    selected = request.get("sources", accounts[account].get(key, []))
+    configured = accounts[account].get(key, [])
+    if not isinstance(configured, list) or any(not isinstance(source, dict) for source in configured):
+        raise ValueError("Planning sources configuration must be a list of objects")
+    if any(not isinstance(source.get("default", True), bool) for source in configured):
+        raise ValueError("Planning source default must be a boolean")
+    explicit = "sources" in request
+    selected = request["sources"] if explicit else [source for source in configured if source.get("default", True)]
     payload = {key: value for key, value in request.items()
                if key in {"account_id", "run_id", "query", "limit", "max_chars", "optional"}}
     payload.update(op="list-topics" if operation == "planning" else "read-topic-strategy",
                    sources=selected)
+    # Pure preflight preserves bad-request errors even when nothing is selected;
+    # all actual source reads still go through the registered bridge below.
+    normalized = validate_planning_request(payload)
+    selection_mode = "explicit" if explicit else "default"
+    if not normalized:
+        return {"status": "not_selected", "account_id": account,
+                "source_status": "not_read", "items": [], "sources": [],
+                "source_selection": [], "selection_mode": selection_mode,
+                "available_sources": configured,
+                "baseline_refs": accounts[account].get("baseline_refs", []),
+                "note": "No planning source was selected; no source was read or searched. "
+                        "Use the current task and account baseline; select a reference explicitly when useful."}, 0
+    known = {(source.get("scope"), str(Path(source["path"]))): source
+             for source in configured if isinstance(source.get("path"), str)}
+    source_selection = [{"scope": source["scope"], "path": source["path"],
+                         "usage": known.get((source["scope"], source["path"]), {}).get("usage", "task_input")}
+                        for source in normalized]
+    # Selection metadata belongs to configuration, never to caller claims about
+    # a source. Do not pass caller-supplied usage/default labels to the bridge.
+    payload["sources"] = [{key: value for key, value in source.items()
+                           if key not in {"usage", "default"}} for source in normalized]
     env = dict(os.environ)
     env["TEXTPICOS_ROOT"] = str(paths.root)
     configured_root = (env.get("TEXTPICOS_AI_WIKI_ROOT") or env.get("AI_WIKI_ROOT")
@@ -224,6 +253,7 @@ def planning(paths, request, operation):
         raise ValueError("Planning bridge returned no structured result") from None
     if not isinstance(output, dict):
         raise ValueError("Planning bridge returned an invalid result")
+    output.update(source_selection=source_selection, selection_mode=selection_mode)
     return output, result.returncode
 
 

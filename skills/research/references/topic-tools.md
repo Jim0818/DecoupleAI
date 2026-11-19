@@ -11,25 +11,35 @@ JSON
 每次一个 JSON 请求，stdout 为结果。必需来源失败、版本冲突或坏请求非零；部分
 资讯失败保留各源健康状态。工具只提供资料、记录与确定性检查，选题判断由主管完成。
 
-## 选范围与规划题
+## 按需查阅规划资料
 
-`config/system/topic-planning.json` 保存三账号的原始文件指针、明确知识库根和
-所选 catalog。采用 bridge 模式；外部文件仍是规划源，配置不复制另一份政策。
+当前选题从用户目标、账号 L1/L2、读者问题与具体材料出发。
+`config/system/topic-planning.json` 保存文件指针、明确知识库根和所选 catalog，
+不定义另一份编辑政策。旧题库及旧战略已标为 `usage: historical_reference`、
+`default: false`；这是保留的历史灵感资料，不是默认排期与权威范围。
 环境中的 `TEXTPICOS_AI_WIKI_ROOT` / `AI_WIKI_ROOT` 优先于本机配置。
 该配置含本机路径，按私有配置保存；复制到其他设备时明确修改根目录。
 
 ```json
-{"op":"strategy","account_id":"intellifuture","query":"任务","max_chars":6000}
+{"op":"planning","account_id":"studio"}
 ```
+
+未显式提供 `sources` 时，只选配置中默认启用的文件。当前三账号旧来源均不默认
+启用，因此返回 `not_selected / not_read`、`available_sources` 与 `baseline_refs`，
+不调用桥接。这不是“题库为空”或“没有好题”，主管应继续当前任务。
+`strategy` 使用同样选择规则；不为完成选题而自动逐个读取可选文件。
+
+确实需要回看旧资料时，从 `available_sources` 选择明确文件传给 `sources`，例如：
 
 ```json
-{"op":"planning","account_id":"studio","query":"Agent","limit":8}
+{"op":"planning","account_id":"studio","sources":[{"scope":"vault","path":"选题库/数据STUDIO/02_数据STUDIO_读者任务型全域选题库_v1.0.md","format":"markdown"}],"query":"Agent","limit":8}
 ```
 
-这两个请求经当前 kb-bridge dispatcher 执行。返回题目粒度、稳定 ID、来源位置、
-SHA-256 与实际状态，不扫描所有文件。query 是查找线索，不是语义范围门控。
-使用外部来源时按实际任务提供 `run_id`；若提供了运行身份，必须真实存在。
-系统维护环境拒绝外部库访问，维护测试使用隔离项目资料；不能为让测试通过解除保护。
+显式请求经当前 kb-bridge dispatcher 执行。返回稳定 ID、原始位置、SHA-256 和实际
+读取/解析状态；`source_selection` 保留所选文件的用途，已登记历史来源不能通过
+请求改写成现行政策。读取成功不代表编辑价值、当前事实或真实作者经历已经核实。
+query 只是查找线索。使用外部来源时按实际任务提供 `run_id`；若提供运行身份，
+必须真实存在。系统维护环境仍拒绝外部库访问，测试使用隔离项目资料。
 
 ## 按需取资讯和需求信号
 

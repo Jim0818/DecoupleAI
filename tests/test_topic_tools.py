@@ -38,6 +38,13 @@ class TopicToolsTests(unittest.TestCase):
         return {"source_id": "official", "item_id": "entry-1",
                 "expected_item_sha256": tools._digest(self.item)}
 
+    def planning_config(self, sources):
+        baseline = ["config/accounts/studio/L1_identity.md", "config/accounts/studio/L2_values.md"]
+        (self.paths.config / "system/topic-planning.json").write_text(json.dumps({
+            "schema_version": 1, "vault_root": "/fixture-explicit-vault", "accounts": {"studio": {
+                "topic_sources": sources, "strategy_sources": sources, "baseline_refs": baseline}}}))
+        return baseline
+
     def test_fetch_persists_success_without_exposing_private_state(self):
         result, code = self.fetch()
         self.assertEqual(code, 0)
@@ -176,15 +183,89 @@ class TopicToolsTests(unittest.TestCase):
         self.assertFalse(self.paths.runs.exists())
 
     def test_planning_uses_registered_bridge_and_preserves_maintenance_scope(self):
+        source = {"scope": "vault", "path": "topics.md", "usage": "historical_reference", "default": False}
+        self.planning_config([source])
         completed = type("Result", (), {"returncode": 2, "stdout": "", "stderr": '{"error":"OUT_OF_SCOPE"}'})()
         with patch.dict("os.environ", {"TEXTPICOS_MAINTENANCE_SCOPE": "system"}, clear=True):
             with patch.object(tools.subprocess, "run", return_value=completed) as run:
-                result, code = tools.execute({"op": "planning", "account_id": "studio"}, paths=self.paths)
+                result, code = tools.execute({"op": "planning", "account_id": "studio", "sources": [source]}, paths=self.paths)
         self.assertEqual(code, 2)
         self.assertEqual(result["error"], "OUT_OF_SCOPE")
+        self.assertEqual(result["source_selection"][0]["usage"], "historical_reference")
         self.assertTrue(run.call_args.args[0][-1].endswith("skills/kb-bridge/dispatch.py"))
         self.assertEqual(run.call_args.kwargs["env"]["TEXTPICOS_MAINTENANCE_SCOPE"], "system")
         self.assertEqual(run.call_args.kwargs["env"]["TEXTPICOS_AI_WIKI_ROOT"], "/fixture-explicit-vault")
+
+    def test_historical_references_are_available_without_being_read_or_searched(self):
+        source = {"scope": "vault", "path": "topics.md", "usage": "historical_reference", "default": False}
+        baseline = self.planning_config([source])
+        with patch.object(tools.subprocess, "run") as run:
+            for operation in ("planning", "strategy"):
+                for explicit_empty in (False, True):
+                    with self.subTest(operation=operation, explicit_empty=explicit_empty):
+                        request = {"op": operation, "account_id": "studio", "query": "Agent"}
+                        if explicit_empty:
+                            request["sources"] = []
+                        result, code = tools.execute(request, paths=self.paths)
+                        self.assertEqual(code, 0)
+                        self.assertEqual(result["status"], "not_selected")
+                        self.assertEqual(result["source_status"], "not_read")
+                        self.assertEqual(result["sources"], [])
+                        self.assertEqual(result["source_selection"], [])
+                        self.assertEqual(result["available_sources"], [source])
+                        self.assertEqual(result["baseline_refs"], baseline)
+                        self.assertNotIn("count", result)
+            run.assert_not_called()
+
+    def test_explicit_reference_retains_provenance_without_accepting_a_claimed_role(self):
+        historical = {"scope": "vault", "path": "topics.md", "usage": "historical_reference", "default": False}
+        self.planning_config([historical])
+        bridge_result = {"status": "ok", "authority_mode": "bridge", "source_status": "read",
+                         "items": [{"source_topic_id": "PY-009", "title": "A source title",
+                                    "source_sha256": "a" * 64, "source_line": 16}],
+                         "sources": [{"path": "topics.md", "status": "read"}]}
+        completed = type("Result", (), {"returncode": 0, "stdout": json.dumps(bridge_result), "stderr": ""})()
+        selected = {"scope": "vault", "path": "./topics.md", "usage": "current_authority", "default": True}
+        with patch.object(tools.subprocess, "run", return_value=completed) as run:
+            result, code = tools.execute({"op": "planning", "account_id": "studio", "sources": [selected]}, paths=self.paths)
+        self.assertEqual(code, 0)
+        for key, value in bridge_result.items():
+            self.assertEqual(result[key], value)
+        self.assertEqual(result["selection_mode"], "explicit")
+        self.assertEqual(result["source_selection"], [{"scope": "vault", "path": "topics.md", "usage": "historical_reference"}])
+        forwarded = json.loads(run.call_args.kwargs["input"])["sources"][0]
+        self.assertNotIn("usage", forwarded)
+        self.assertNotIn("default", forwarded)
+
+    def test_default_and_explicit_selection_keep_other_sources_separate(self):
+        historical = {"scope": "vault", "path": "old.md", "usage": "historical_reference", "default": False}
+        active = {"scope": "project", "path": "resources/current.md", "usage": "current_scope"}
+        other = {"scope": "project", "path": "resources/task.md", "usage": "current_authority"}
+        self.planning_config([historical, active])
+        completed = type("Result", (), {"returncode": 0, "stdout": '{"status":"empty","items":[],"sources":[]}', "stderr": ""})()
+        for selection, expected_path, usage in ((None, active["path"], "current_scope"),
+                                                 ([other], other["path"], "task_input")):
+            with self.subTest(selection=selection):
+                request = {"op": "strategy", "account_id": "studio"}
+                if selection is not None:
+                    request["sources"] = selection
+                with patch.object(tools.subprocess, "run", return_value=completed) as run:
+                    result, code = tools.execute(request, paths=self.paths)
+                self.assertEqual(code, 0)
+                self.assertEqual(result["status"], "empty")
+                forwarded = json.loads(run.call_args.kwargs["input"])
+                self.assertEqual(forwarded["op"], "read-topic-strategy")
+                self.assertEqual([source["path"] for source in forwarded["sources"]], [expected_path])
+                self.assertEqual([source["usage"] for source in result["source_selection"]], [usage])
+
+    def test_unselected_sources_do_not_turn_bad_requests_into_success(self):
+        self.planning_config([{"scope": "vault", "path": "old.md", "default": False}])
+        with patch.object(tools.subprocess, "run") as run:
+            for invalid in ({"query": None}, {"limit": 0}, {"optional": "yes"}, {"sources": None}):
+                with self.subTest(invalid=invalid):
+                    with self.assertRaises(ValueError):
+                        tools.execute({"op": "planning", "account_id": "studio", **invalid}, paths=self.paths)
+            run.assert_not_called()
 
     def test_cache_symlink_and_unknown_source_are_rejected(self):
         with self.assertRaises(ValueError):
